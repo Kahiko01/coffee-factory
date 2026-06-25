@@ -1,0 +1,101 @@
+================================================================================
+KENYA COFFEE FACTORY MANAGEMENT SYSTEM
+COMPLETE FARMER CREDENTIALS LIST
+================================================================================
+
+No.   Username                  Password        Full Name                      Member No.   Phone          
+------------------------------------------------------------------------------------------------------
+1     kiprono1                  farmer1           Kiprono Cheruiyot              FARM0001     +254712000001  
+2     kipchumba2                farmer2           Kipchumba Kemboi               FARM0002     +254712000002  
+3     chepkoech3                farmer3           Chepkoech Rotich               FARM0003     +254712000003  
+4     jepkemoi4                 farmer4           Jepkemoi Kipruto               FARM0004     +254712000004  
+5     kipngetich5               farmer5           Kipngetich Bett                FARM0005     +254712000005  
+6     chebet6                   farmer6           Chebet Kiprotich               FARM0006     +254712000006  
+7     kiptanui7                 farmer7           Kiptanui Kimutai               FARM0007     +254712000007  
+8     jepchirchir8              farmer8           Jepchirchir Koech              FARM0008     +254712000008  
+9     kipkemboi9                farmer9           Kipkemboi Tanui                FARM0009     +254712000009  
+10    chepngeno10               farmer10          Chepngeno Kiplagat             FARM0010     +254712000010  
+11    kamau11                   farmer11          Kamau Njoroge                  FARM0011     +254713000001  
+12    wanjiku12                 farmer12          Wanjiku Wambui                 FARM0012     +254713000002  
+13    njeri13                   farmer13          Njeri Mwangi                   FARM0013     +254713000003  
+14    wanjiru14                 farmer14          Wanjiru Kamande                FARM0014     +254713000004  
+15    nyambura15                farmer15          Nyambura Gathogo               FARM0015     +254713000005  
+16    muthoni16                 farmer16          Muthoni Ndung'u                FARM0016     +254713000006  
+17    wambui17                  farmer17          Wambui Kariuki                 FARM0017     +254713000007  
+18    njoki18                   farmer18          Njoki Maina                    FARM0018     +254713000008  
+19    wangari19                 farmer19          Wangari Macharia               FARM0019     +254713000009  
+20    mumbi20                   farmer20          Mumbi Gitonga                  FARM0020     +254713000010  
+21    otieno21                  farmer21          Otieno Omondi                  FARM0021     +254714000001  
+22    achieng22                 farmer22          Achieng Odhiambo               FARM0022     +254714000002  
+23    ochieng23                 farmer23          Ochieng Okoth                  FARM0023     +254714000003  
+24    adhiambo24                farmer24          Adhiambo Owino                 FARM0024     +254714000004  
+25    onyango25                 farmer25          Onyango Oluoch                 FARM0025     +254714000005  
+26    akinyi26                  farmer26          Akinyi Obonyo                  FARM0026     +254714000006  
+27    odhiambo27                farmer27          Odhiambo Onyango               FARM0027     +254714000007  
+28    atieno28                  farmer28          Atieno Ogolla                  FARM0028     +254714000008  
+29    owuor29                   farmer29          Owuor Opiyo                    FARM0029     +254714000009  
+30    awino30                   farmer30          Awino Otieno                   FARM0030     +254714000010  
+31    wafula31                  farmer31          Wafula Wekesa                  FARM0031     +254715000001  
+32    nasimiyu32                farmer32          Nasimiyu Wanjala               FARM0032     +254715000002  
+33    wamalwa33                 farmer33          Wamalwa Simiyu                 FARM0033     +254715000003  
+34    nekesa34                  farmer34          Nekesa Barasa                  FARM0034     +254715000004  
+35    wanjala35                 farmer35          Wanjala Wafula                 FARM0035     +254715000005  
+36    nanjala36                 farmer36          Nanjala Wamalwa                FARM0036     +254715000006  
+37    sikuku37                  farmer37          Sikuku Wekesa                  FARM0037     +254715000007  
+38    nelima38                  farmer38          Nelima Simiyu                  FARM0038     +254715000008  
+39    barasa39                  farmer39          Barasa Wanjala                 FARM0039     +254715000009  
+40    naliaka40                 farmer40          Naliaka Wafula                 FARM0040     +254715000010  
+41    mutuku41                  farmer41          Mutuku Muthoka                 FARM0041     +254716000001  
+42    mueni42                   farmer42          Mueni Kioko                    FARM0042     +254716000002  
+43    muthama43                 farmer43          Muthama Mutua                  FARM0043     +254716000003  
+44    kalekye44                 farmer44          Kalekye Musyoka                FARM0044     +254716000004  
+45    mutua45                   farmer45          Mutua Mwikali                  FARM0045     +254716000005  
+46    mwikali46                 farmer46          Mwikali Mutuku                 FARM0046     +254716000006  
+47    musyoka47                 farmer47          Musyoka Muthama                FARM0047     +254716000007  
+48    kamene48                  farmer48          Kamene Mutua                   FARM0048     +254716000008  
+49    kioko49                   farmer49          Kioko Muthoka                  FARM0049     +254716000009  
+50    mutheu50                  farmer50          Mutheu Musyoka                 FARM0050     +254716000010  
+51    ongeri51                  farmer51          Ongeri Nyambane                FARM0051     +254717000001  
+52    kerubo52                  farmer52          Kerubo Momanyi                 FARM0052     +254717000002  
+53    nyambane53                farmer53          Nyambane Ongeri                FARM0053     +254717000003  
+54    kwamboka54                farmer54          Kwamboka Ongwae                FARM0054     +254717000004  
+55    momanyi55                 farmer55          Momanyi Kerubo                 FARM0055     +254717000005  
+56    moraa56                   farmer56          Moraa Nyakundi                 FARM0056     +254717000006  
+57    nyakundi57                farmer57          Nyakundi Ongeri                FARM0057     +254717000007  
+58    bosibori58                farmer58          Bosibori Momanyi               FARM0058     +254717000008  
+59    ongwae59                  farmer59          Ongwae Kerubo                  FARM0059     +254717000009  
+60    kemunto60                 farmer60          Kemunto Nyambane               FARM0060     +254717000010  
+61    mwirigi61                 farmer61          Mwirigi Muthuri                FARM0061     +254718000001  
+62    nkirote62                 farmer62          Nkirote Mugambi                FARM0062     +254718000002  
+63    mugambi63                 farmer63          Mugambi Gitonga                FARM0063     +254718000003  
+64    kanana64                  farmer64          Kanana Murithi                 FARM0064     +254718000004  
+65    murithi65                 farmer65          Murithi Mwirigi                FARM0065     +254718000005  
+66    gacheri66                 farmer66          Gacheri Mugambi                FARM0066     +254718000006  
+67    gitonga67                 farmer67          Gitonga Muthuri                FARM0067     +254718000007  
+68    karimi68                  farmer68          Karimi Murithi                 FARM0068     +254718000008  
+69    muthuri69                 farmer69          Muthuri Mwirigi                FARM0069     +254718000009  
+70    ntinyari70                farmer70          Ntinyari Gitonga               FARM0070     +254718000010  
+71    katana71                  farmer71          Katana Ngumbao                 FARM0071     +254719000001  
+72    nyevu72                   farmer72          Nyevu Kazungu                  FARM0072     +254719000002  
+73    kazungu73                 farmer73          Kazungu Charo                  FARM0073     +254719000003  
+74    nyota74                   farmer74          Nyota Katana                   FARM0074     +254719000004  
+75    charo75                   farmer75          Charo Ngumbao                  FARM0075     +254719000005  
+76    nyang'anyi76              farmer76          Nyang'anyi Kazungu             FARM0076     +254719000006  
+77    ngumbao77                 farmer77          Ngumbao Katana                 FARM0077     +254719000007  
+78    zawadi78                  farmer78          Zawadi Charo                   FARM0078     +254719000008  
+79    baya79                    farmer79          Baya Kazungu                   FARM0079     +254719000009  
+80    riziki80                  farmer80          Riziki Ngumbao                 FARM0080     +254719000010  
+81    abdullahi81               farmer81          Abdullahi Hassan               FARM0081     +254720000001  
+82    fatuma82                  farmer82          Fatuma Mohammed                FARM0082     +254720000002  
+83    ahmed83                   farmer83          Ahmed Ibrahim                  FARM0083     +254720000003  
+84    amina84                   farmer84          Amina Omar                     FARM0084     +254720000004  
+85    mwangi85                  farmer85          Mwangi Kimani                  FARM0085     +254720000005  
+86    njeri86                   farmer86          Njeri Githinji                 FARM0086     +254720000006  
+87    omondi87                  farmer87          Omondi Okello                  FARM0087     +254720000007  
+88    anyango88                 farmer88          Anyango Oduor                  FARM0088     +254720000008  
+89    wanjiku89                 farmer89          Wanjiku Ndungu                 FARM0089     +254720000009  
+90    kamau90                   farmer90          Kamau Thuo                     FARM0090     +254720000010  
+
+================================================================================
+Total Farmers: 90
+Generated: 2026-06-25 12:47:38

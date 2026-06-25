@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kenya Coffee Factory - Premium Coffee Management System</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            background: #0a0a0a;
+            color: white;
+        }
+
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: 1;
+        }
+
+        .content-overlay {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            background: linear-gradient(135deg, 
+                rgba(10, 10, 10, 0.85) 0%, 
+                rgba(20, 20, 30, 0.8) 50%, 
+                rgba(10, 10, 10, 0.85) 100%);
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            padding: 1.2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(200, 169, 110, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #c8a96e, #f5e6d3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar-brand .logo-icon {
+            font-size: 2rem;
+            -webkit-text-fill-color: initial;
+        }
+
+        .navbar-nav {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .navbar-nav a {
+            color: #cccccc;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .navbar-nav a:hover {
+            color: #c8a96e;
+        }
+
+        .navbar-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: #c8a96e;
+            transition: width 0.3s;
+        }
+
+        .navbar-nav a:hover::after {
+            width: 80%;
+        }
+
+        .btn-login {
+            background: linear-gradient(135deg, #c8a96e, #b8944f);
+            color: #0a0a0a !important;
+            padding: 0.7rem 2rem !important;
+            border-radius: 50px !important;
+            font-weight: 600 !important;
+            letter-spacing: 0.5px;
+            box-shadow: 0 5px 20px rgba(200, 169, 110, 0.3);
+            transition: all 0.3s !important;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(200, 169, 110, 0.5);
+            background: linear-gradient(135deg, #d4b87a, #c8a96e);
+        }
+
+        .btn-login::after {
+            display: none !important;
+        }
+
+        .hero-section {
+            padding: 6rem 2rem 4rem;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: rgba(200, 169, 110, 0.1);
+            border: 1px solid rgba(200, 169, 110, 0.3);
+            border-radius: 50px;
+            color: #c8a96e;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.6s;
+        }
+
+        .hero-title {
+            font-size: 5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            animation: fadeInUp 0.8s;
+        }
+
+        .hero-title .gradient-text {
+            background: linear-gradient(135deg, #c8a96e, #f5e6d3, #c8a96e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: #888;
+            margin-bottom: 3rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.8;
+            animation: fadeInUp 1s;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            animation: fadeInUp 1.2s;
+        }
+
+        .btn-primary {
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, #c8a96e, #b8944f);
+            color: #0a0a0a;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(200, 169, 110, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(200, 169, 110, 0.5);
+        }
+
+        .btn-secondary {
+            padding: 1rem 2.5rem;
+            background: transparent;
+            color: #c8a96e;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            border: 2px solid #c8a96e;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(200, 169, 110, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .features-section {
+            padding: 4rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #c8a96e;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(200, 169, 110, 0.05), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(200, 169, 110, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #c8a96e;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-description {
+            color: #999;
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stats-section {
+            padding: 4rem 2rem;
+            background: rgba(200, 169, 110, 0.02);
+            border-top: 1px solid rgba(200, 169, 110, 0.1);
+            border-bottom: 1px solid rgba(200, 169, 110, 0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #c8a96e, #f5e6d3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .cta-section {
+            padding: 6rem 2rem;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #c8a96e;
+        }
+
+        .cta-description {
+            color: #888;
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            line-height: 1.8;
+        }
+
+        .footer {
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #666;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            z-index: 3;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-20px); }
+            60% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        .scroll-indicator span {
+            display: block;
+            width: 30px;
+            height: 50px;
+            border: 2px solid #c8a96e;
+            border-radius: 15px;
+            position: relative;
+        }
+
+        .scroll-indicator span::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            width: 4px;
+            height: 10px;
+            background: #c8a96e;
+            border-radius: 2px;
+            transform: translateX(-50%);
+            animation: scroll 1.5s infinite;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(-50%) translateY(0); opacity: 1; }
+            100% { transform: translateX(-50%) translateY(15px); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+    
+    <div class="content-overlay">
+        <nav class="navbar">
+            <a href="/" class="navbar-brand">
+                <span class="logo-icon">☕</span> KCFMS
+            </a>
+            <ul class="navbar-nav">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#stats">Statistics</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/register">Register</a></li>
+                <li><a href="/login" class="btn-login">Login</a></li>
+            </ul>
+        </nav>
+
+        <section class="hero-section">
+            <div class="hero-badge">🌱 Kenya's Premium Coffee Management Platform</div>
+            <h1 class="hero-title">
+                From Farm to Cup<br>
+                <span class="gradient-text">Digitally Connected</span>
+            </h1>
+            <p class="hero-subtitle">
+                Streamline your coffee cooperative operations with real-time yield tracking, 
+                automated payments, and comprehensive analytics. Empowering farmers across Kenya.
+            </p>
+            <div class="hero-buttons">
+                <a href="/register" class="btn-primary">Get Started →</a>
+                <a href="/about" class="btn-secondary">Learn More</a>
+            </div>
+        </section>
+
+        <div class="scroll-indicator">
+            <span></span>
+        </div>
+
+        <section id="features" class="features-section">
+            <h2 class="section-title">Why Choose KCFMS?</h2>
+            <p class="section-subtitle">Everything you need to manage your coffee cooperative efficiently</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🌱</div>
+                    <h3 class="feature-title">Smart Yield Tracking</h3>
+                    <p class="feature-description">
+                        Monitor daily, weekly, monthly, and seasonal production with real-time analytics and quality grading.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3 class="feature-title">Automated Payments</h3>
+                    <p class="feature-description">
+                        Instant payment calculations based on quality grades with downloadable PDF statements and payslips.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">Advanced Analytics</h3>
+                    <p class="feature-description">
+                        Generate comprehensive reports in PDF and Excel formats for better decision-making.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔔</div>
+                    <h3 class="feature-title">Smart Notifications</h3>
+                    <p class="feature-description">
+                        Receive instant SMS and in-app alerts for deliveries, payments, and cooperative announcements.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3 class="feature-title">Secure & Reliable</h3>
+                    <p class="feature-description">
+                        Enterprise-grade security with role-based access control and encrypted data protection.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3 class="feature-title">Accessible Anywhere</h3>
+                    <p class="feature-description">
+                        Access your account from any device, anywhere in Kenya, with our responsive web platform.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="stats" class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="counter-farmers">0</div>
+                    <div class="stat-label">Active Farmers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="counter-kilos">0</div>
+                    <div class="stat-label">Kilos Processed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="counter-centers">0</div>
+                    <div class="stat-label">Collection Centers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="counter-rate">0</div>
+                    <div class="stat-label">Satisfaction Rate</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <h2 class="cta-title">Ready to Transform Your Cooperative?</h2>
+            <p class="cta-description">
+                Join hundreds of coffee farmers across Kenya who are already benefiting from 
+                digital management. Start your journey today.
+            </p>
+            <a href="/register" class="btn-primary">Start Free Now →</a>
+        </section>
+
+        <footer class="footer">
+            <p>&copy; 2024 Kenya Coffee Factory Management System. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Three.js 3D Coffee Plant Scene
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x0a0a0a, 0.0008);
+        
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setClearColor(0x000000, 0);
+        renderer.shadowMap.enabled = true;
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        // Enhanced lighting
+        const ambientLight = new THREE.AmbientLight(0x404060, 0.5);
+        scene.add(ambientLight);
+        
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(5, 5, 5);
+        directionalLight.castShadow = true;
+        scene.add(directionalLight);
+        
+        const pointLight1 = new THREE.PointLight(0xc8a96e, 2, 20);
+        pointLight1.position.set(0, 5, 0);
+        scene.add(pointLight1);
+        
+        const pointLight2 = new THREE.PointLight(0x4a3728, 1, 15);
+        pointLight2.position.set(-3, 2, 3);
+        scene.add(pointLight2);
+
+        // Create 3D Coffee Plant
+        function createCoffeePlant() {
+            const plantGroup = new THREE.Group();
+            
+            // Decorative pot
+            const potGeometry = new THREE.CylinderGeometry(0.6, 0.8, 1.2, 32);
+            const potMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0x5d4037,
+                roughness: 0.7,
+                metalness: 0.2
+            });
+            const pot = new THREE.Mesh(potGeometry, potMaterial);
+            pot.position.y = -1.2;
+            pot.castShadow = true;
+            plantGroup.add(pot);
+            
+            // Pot rim
+            const rimGeometry = new THREE.TorusGeometry(0.6, 0.05, 16, 32);
+            const rimMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0x8d6e63,
+                roughness: 0.5,
+                metalness: 0.5
+            });
+            const rim = new THREE.Mesh(rimGeometry, rimMaterial);
+            rim.position.y = -0.6;
+            rim.rotation.x = Math.PI / 2;
+            plantGroup.add(rim);
+            
+            // Soil
+            const soilGeometry = new THREE.CylinderGeometry(0.55, 0.55, 0.15, 32);
+            const soilMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0x3e2723,
+                roughness: 1
+            });
+            const soil = new THREE.Mesh(soilGeometry, soilMaterial);
+            soil.position.y = -0.55;
+            plantGroup.add(soil);
+            
+            // Main stem
+            const stemCurve = new THREE.CubicBezierCurve3(
+                new THREE.Vector3(0, -0.5, 0),
+                new THREE.Vector3(0.2, 0.5, 0.1),
+                new THREE.Vector3(-0.1, 1.5, -0.1),
+                new THREE.Vector3(0, 3, 0)
+            );
+            const stemGeometry = new THREE.TubeGeometry(stemCurve, 20, 0.06, 8, false);
+            const stemMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0x2e7d32,
+                roughness: 0.8
+            });
+            const stem = new THREE.Mesh(stemGeometry, stemMaterial);
+            stem.castShadow = true;
+            plantGroup.add(stem);
+            
+            // Branches and leaves
+            for (let i = 0; i < 7; i++) {
+                const angle = (i * 2 * Math.PI) / 7;
+                const height = 0.3 + i * 0.35;
+                
+                // Create branch curve
+                const branchStart = new THREE.Vector3(0, height, 0);
+                const branchEnd = new THREE.Vector3(
+                    Math.cos(angle) * 1.2,
+                    height + 0.2,
+                    Math.sin(angle) * 1.2
+                );
+                const branchCurve = new THREE.LineCurve3(branchStart, branchEnd);
+                const branchGeometry = new THREE.TubeGeometry(branchCurve, 8, 0.03, 8, false);
+                const branch = new THREE.Mesh(branchGeometry, stemMaterial);
+                plantGroup.add(branch);
+                
+                // Add leaves
+                for (let j = 0; j < 3; j++) {
+                    const leafGeometry = new THREE.SphereGeometry(0.2, 8, 8);
+                    leafGeometry.scale(1, 0.1, 0.6);
+                    const leafMaterial = new THREE.MeshStandardMaterial({ 
+                        color: new THREE.Color().setHSL(0.2 + j * 0.03, 0.7, 0.25 + j * 0.05),
+                        roughness: 0.6,
+                        side: THREE.DoubleSide
+                    });
+                    const leaf = new THREE.Mesh(leafGeometry, leafMaterial);
+                    const leafPos = branchCurve.getPoint(0.7 + j * 0.1);
+                    leaf.position.copy(leafPos);
+                    leaf.position.x += Math.cos(angle + j * 0.5) * 0.2;
+                    leaf.position.z += Math.sin(angle + j * 0.5) * 0.2;
+                    leaf.rotation.y = angle + j * 0.5;
+                    leaf.rotation.x = Math.random() * 0.5;
+                    plantGroup.add(leaf);
+                }
+            }
+            
+            // Coffee cherries
+            for (let i = 0; i < 25; i++) {
+                const cherryGeometry = new THREE.SphereGeometry(0.07, 16, 16);
+                const cherryMaterial = new THREE.MeshStandardMaterial({ 
+                    color: new THREE.Color().setHSL(0.05 + Math.random() * 0.08, 0.9, 0.3 + Math.random() * 0.2),
+                    roughness: 0.3,
+                    metalness: 0.1
+                });
+                const cherry = new THREE.Mesh(cherryGeometry, cherryMaterial);
+                const angle = Math.random() * Math.PI * 2;
+                const height = 1.5 + Math.random() * 1.5;
+                const radius = 0.4 + Math.random() * 0.5;
+                cherry.position.set(
+                    Math.cos(angle) * radius,
+                    height,
+                    Math.sin(angle) * radius
+                );
+                cherry.castShadow = true;
+                plantGroup.add(cherry);
+            }
+            
+            return plantGroup;
+        }
+
+        // Create floating coffee beans
+        function createCoffeeBeans() {
+            const beansGroup = new THREE.Group();
+            
+            for (let i = 0; i < 40; i++) {
+                const beanGeometry = new THREE.SphereGeometry(0.04, 8, 8);
+                beanGeometry.scale(1, 0.5, 1.5);
+                const beanMaterial = new THREE.MeshStandardMaterial({ 
+                    color: 0x4e342e,
+                    roughness: 0.4,
+                    metalness: 0.3
+                });
+                const bean = new THREE.Mesh(beanGeometry, beanMaterial);
+                
+                bean.position.x = (Math.random() - 0.5) * 15;
+                bean.position.y = -2 + Math.random() * 8;
+                bean.position.z = (Math.random() - 0.5) * 15;
+                
+                bean.userData = {
+                    speed: 0.001 + Math.random() * 0.004,
+                    rotationSpeed: 0.01 + Math.random() * 0.02,
+                    amplitude: 0.5 + Math.random() * 1,
+                    offset: Math.random() * Math.PI * 2
+                };
+                
+                beansGroup.add(bean);
+            }
+            
+            return beansGroup;
+        }
+
+        // Create web-like connections
+        function createWebConnections() {
+            const linesGroup = new THREE.Group();
+            const points = [];
+            
+            for (let i = 0; i < 30; i++) {
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.random() * Math.PI;
+                const radius = 4 + Math.random() * 3;
+                
+                points.push(new THREE.Vector3(
+                    radius * Math.sin(phi) * Math.cos(theta),
+                    -2 + radius * Math.cos(phi),
+                    radius * Math.sin(phi) * Math.sin(theta)
+                ));
+            }
+            
+            for (let i = 0; i < points.length; i++) {
+                for (let j = i + 1; j < points.length; j++) {
+                    if (points[i].distanceTo(points[j]) < 4) {
+                        const lineGeometry = new THREE.BufferGeometry().setFromPoints([points[i], points[j]]);
+                        const lineMaterial = new THREE.LineBasicMaterial({ 
+                            color: 0xc8a96e,
+                            transparent: true,
+                            opacity: 0.15
+                        });
+                        const line = new THREE.Line(lineGeometry, lineMaterial);
+                        linesGroup.add(line);
+                    }
+                }
+            }
+            
+            points.forEach(point => {
+                const nodeGeometry = new THREE.SphereGeometry(0.03, 8, 8);
+                const nodeMaterial = new THREE.MeshStandardMaterial({ 
+                    color: 0xc8a96e,
+                    emissive: 0xc8a96e,
+                    emissiveIntensity: 0.5,
+                    roughness: 0.3
+                });
+                const node = new THREE.Mesh(nodeGeometry, nodeMaterial);
+                node.position.copy(point);
+                linesGroup.add(node);
+            });
+            
+            return linesGroup;
+        }
+
+        const coffeePlant = createCoffeePlant();
+        coffeePlant.position.y = -1;
+        scene.add(coffeePlant);
+        
+        const coffeeBeans = createCoffeeBeans();
+        scene.add(coffeeBeans);
+        
+        const webConnections = createWebConnections();
+        scene.add(webConnections);
+
+        camera.position.z = 10;
+        camera.position.y = 1;
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            coffeePlant.rotation.y += 0.004;
+            
+            coffeeBeans.children.forEach(bean => {
+                bean.position.y += Math.sin(Date.now() * bean.userData.speed + bean.userData.offset) * 0.003;
+                bean.rotation.y += bean.userData.rotationSpeed;
+                bean.rotation.x += bean.userData.rotationSpeed * 0.5;
+            });
+            
+            webConnections.rotation.y += 0.0008;
+            webConnections.rotation.x += 0.0003;
+            
+            camera.position.x = Math.sin(Date.now() * 0.00015) * 3;
+            camera.position.y = 1 + Math.cos(Date.now() * 0.0002) * 0.5;
+            camera.lookAt(0, 0.5, 0);
+            
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Mouse parallax effect
+        document.addEventListener('mousemove', (event) => {
+            const mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+            const mouseY = (event.clientY / window.innerHeight) * 2 - 1;
+            
+            webConnections.rotation.y += (mouseX * 0.2 - webConnections.rotation.y) * 0.05;
+            webConnections.rotation.x += (mouseY * 0.1 - webConnections.rotation.x) * 0.05;
+        });
+
+        // Counter animation
+        function animateCounter(elementId, target, duration) {
+            const element = document.getElementById(elementId);
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target.toLocaleString() + (elementId === 'counter-rate' ? '%' : '+');
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current).toLocaleString() + (elementId === 'counter-rate' ? '%' : '+');
+                }
+            }, 16);
+        }
+
+        // Start counters when they come into view
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounter('counter-farmers', 2500, 2000);
+                    animateCounter('counter-kilos', 500000, 2000);
+                    animateCounter('counter-centers', 150, 2000);
+                    animateCounter('counter-rate', 98, 2000);
+                    observer.unobserve(entry.target);
+                }
+            });
+        });
+
+        const statsSection = document.getElementById('stats');
+        if (statsSection) {
+            observer.observe(statsSection);
+        }
+    </script>
+</body>
+</html>

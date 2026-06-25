@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Karuhiu Utheri Digital Farmers Co-op</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-gradient-dark: linear-gradient(135deg, #09150d 0%, #0d1f14 50%, #1a1612 100%);
+            --panel-bg: rgba(13, 27, 18, 0.5);
+            --panel-border: rgba(255, 255, 255, 0.08);
+            --text-main: #e1ede6;
+            --text-muted: #8fa396;
+            --emerald: #10b981;
+            --gold: #d4af37;
+            --coffee: #5c4033;
+            --transition-smooth: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { 
+            background: var(--bg-gradient-dark); 
+            color: var(--text-main); 
+            min-height:100vh; 
+            display:flex; 
+            justify-content:center; 
+            align-items:center; 
+        }
+        body::before { 
+            content:''; 
+            position:fixed; 
+            top:0; left:0; 
+            width:100%; height:100%; 
+            background-image:url('https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&q=80&w=1920'); 
+            background-size:cover; 
+            opacity:0.04; 
+            z-index:-2; 
+        }
+        .login-wrapper {
+            width: 100%;
+            max-width: 440px;
+            padding: 20px;
+        }
+        .glass-panel { 
+            background: var(--panel-bg); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px);
+            border:1px solid var(--panel-border); 
+            border-radius:24px; 
+            padding: 40px;
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .login-header .logo {
+            font-size: 3rem;
+            margin-bottom: 8px;
+        }
+        .login-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            background: linear-gradient(to right, var(--gold), #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 4px;
+        }
+        .login-header p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .form-group .input-wrapper {
+            position: relative;
+        }
+        .form-group .input-wrapper i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px 14px 44px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--panel-border);
+            border-radius: 14px;
+            color: var(--text-main);
+            font-size: 1rem;
+            transition: var(--transition-smooth);
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
+        }
+        .form-group input::placeholder {
+            color: rgba(255,255,255,0.2);
+        }
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--gold), #b8941f);
+            border: none;
+            border-radius: 14px;
+            color: #000;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            margin-top: 8px;
+        }
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.3);
+        }
+        .alert {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        .alert-danger {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--emerald);
+        }
+        .links {
+            text-align: center;
+            margin-top: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: var(--transition-smooth);
+        }
+        .links a:hover {
+            color: var(--gold);
+        }
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 24px 0;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--panel-border);
+        }
+        .divider span {
+            padding: 0 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-wrapper">
+        <div class="glass-panel">
+            <div class="login-header">
+                <div class="logo">☕</div>
+                <h1>Karuhiu Utheri</h1>
+                <p>Digital Farmers Cooperative</p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST">
+                <div class="form-group">
+                    <label>Username or Member Number</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" name="username" placeholder="Enter your username" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" name="password" placeholder="Enter your password" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-login">
+                    <i class="fa-solid fa-right-to-bracket"></i> Sign In
+                </button>
+            </form>
+
+            <div class="divider">
+                <span>or</span>
+            </div>
+
+            <div class="links">
+                <a href="/reset-password">
+                    <i class="fa-solid fa-key"></i> Forgot Password?
+                </a>
+                <a href="/register">
+                    <i class="fa-solid fa-user-plus"></i> Create New Account
+                </a>
+            </div>
+        </div>
+        <div style="text-align:center; margin-top:20px;">
+            <a href="/" style="color:var(--text-muted); text-decoration:none; font-size:0.85rem;">
+                <i class="fa-solid fa-arrow-left"></i> Back to Home
+            </a>
+        </div>
+    </div>
+</body>
+</html>

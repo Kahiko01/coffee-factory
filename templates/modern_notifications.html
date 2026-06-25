@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - Karuhiu Utheri</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-gradient-dark: linear-gradient(135deg, #09150d 0%, #0d1f14 50%, #1a1612 100%);
+            --panel-bg: rgba(13, 27, 18, 0.45);
+            --panel-border: rgba(255, 255, 255, 0.06);
+            --text-main: #e1ede6;
+            --text-muted: #8fa396;
+            --emerald: #10b981;
+            --gold: #d4af37;
+            --coffee: #5c4033;
+            --transition-smooth: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: var(--bg-gradient-dark); color: var(--text-main); min-height:100vh; }
+        body::before { content:''; position:fixed; top:0; left:0; width:100%; height:100%; background-image:url('https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&q=80&w=1920'); background-size:cover; opacity:0.04; z-index:-2; }
+        .glass-panel { background: var(--panel-bg); backdrop-filter: blur(20px); border:1px solid var(--panel-border); border-radius:24px; }
+        .app-container { display:grid; grid-template-columns:280px 1fr; min-height:100vh; padding:24px; gap:24px; }
+        .sidebar { padding:32px 24px; height:calc(100vh - 48px); position:sticky; top:24px; }
+        .sidebar-brand h2 { font-family:'Playfair Display', serif; font-size:1.4rem; background:linear-gradient(to right, var(--gold), #fff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .sidebar-brand small { color:var(--emerald); font-size:0.75rem; letter-spacing:2px; text-transform:uppercase; font-weight:700; }
+        .sidebar-nav { list-style:none; display:flex; flex-direction:column; gap:8px; margin-top:40px; }
+        .sidebar-nav a { display:flex; align-items:center; gap:16px; color:var(--text-muted); text-decoration:none; padding:14px 18px; border-radius:14px; font-weight:500; transition:var(--transition-smooth); }
+        .sidebar-nav a:hover, .sidebar-nav a.active { color:#fff; background:linear-gradient(135deg, rgba(16,185,129,0.25), rgba(92,64,51,0.25)); border-left:4px solid var(--gold); }
+        .dashboard-view { display:flex; flex-direction:column; gap:24px; }
+        .top-navbar { display:flex; justify-content:space-between; align-items:center; padding:16px 32px; }
+        .notification-card { padding:20px; margin-bottom:16px; border-left:4px solid var(--gold); transition:var(--transition-smooth); }
+        .notification-card:hover { transform:translateX(8px); border-left-color:var(--emerald); }
+        .notification-card.unread { border-left-color:var(--emerald); background:rgba(16,185,129,0.05); }
+        .notification-header { display:flex; justify-content:space-between; margin-bottom:8px; }
+        .notification-title { font-weight:600; font-size:1rem; }
+        .notification-date { color:var(--text-muted); font-size:0.8rem; }
+        .notification-content { color:var(--text-muted); line-height:1.6; font-size:0.9rem; }
+        .notification-type { display:inline-block; padding:4px 10px; border-radius:20px; font-size:0.75rem; font-weight:600; margin-top:8px; }
+        .type-delivery { background:rgba(16,185,129,0.15); color:var(--emerald); }
+        .type-payment { background:rgba(212,175,55,0.15); color:var(--gold); }
+        .type-announcement { background:rgba(59,130,246,0.15); color:#60a5fa; }
+        .empty-state { text-align:center; padding:60px; }
+        .empty-state i { font-size:4rem; color:var(--text-muted); margin-bottom:16px; display:block; }
+        .btn { padding:10px 20px; border-radius:10px; text-decoration:none; font-weight:600; transition:var(--transition-smooth); display:inline-block; border:none; cursor:pointer; }
+        .btn-gold { background:var(--gold); color:#000; }
+        .btn-gold:hover { box-shadow:0 0 20px rgba(212,175,55,0.4); }
+        .badge-count { background:var(--emerald); color:#fff; padding:2px 8px; border-radius:10px; font-size:0.75rem; margin-left:8px; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="glass-panel sidebar">
+            <div class="sidebar-brand">
+                <h2>Karuhiu Utheri</h2>
+                <small>Digital Farmers Co-op</small>
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="/farmer/modern-dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+                <li><a href="/farmer/modern-deliveries"><i class="fa-solid fa-truck"></i> Deliveries</a></li>
+                <li><a href="/farmer/modern-payments"><i class="fa-solid fa-credit-card"></i> Payments</a></li>
+                <li><a href="/farmer/modern-profile"><i class="fa-solid fa-user"></i> Profile</a></li>
+                <li><a href="/farmer/modern-notifications" class="active"><i class="fa-solid fa-bell"></i> Notifications{% if notifications %}<span class="badge-count">{{ notifications|selectattr('is_read', 'equalto', false)|list|length }}</span>{% endif %}</a></li>
+                <li><a href="/change-password"><i class="fa-solid fa-lock"></i> Security</a></li>
+                <li><a href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+            </ul>
+        </aside>
+        <main class="dashboard-view">
+            <nav class="glass-panel top-navbar">
+                <h2 style="font-family:'Playfair Display',serif;">🔔 Notifications</h2>
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <strong>{{ current_user.full_name }}</strong>
+                    <span style="color:var(--emerald);">#{{ current_user.membership_number }}</span>
+                </div>
+            </nav>
+            
+            {% if notifications %}
+                {% for notification in notifications %}
+                <div class="glass-panel notification-card {% if not notification.is_read %}unread{% endif %}">
+                    <div class="notification-header">
+                        <span class="notification-title">
+                            {% if notification.type == 'delivery' %}📦 {% elif notification.type == 'payment' %}💰 {% else %}📢 {% endif %}
+                            {{ notification.title }}
+                        </span>
+                        <span class="notification-date">{{ notification.created_at.strftime('%b %d, %Y at %H:%M') }}</span>
+                    </div>
+                    <div class="notification-content">{{ notification.content }}</div>
+                    <span class="notification-type type-{{ notification.type }}">{{ notification.type|title }}</span>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="glass-panel empty-state">
+                    <i class="fa-solid fa-bell-slash"></i>
+                    <h3>No Notifications Yet</h3>
+                    <p style="color:var(--text-muted);">You'll see delivery updates, payment alerts, and announcements here.</p>
+                </div>
+            {% endif %}
+        </main>
+    </div>
+</body>
+</html>

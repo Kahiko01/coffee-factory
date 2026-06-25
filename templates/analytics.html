@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - KCFMS</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+            padding: 2rem 1rem;
+            color: white;
+        }
+
+        .sidebar-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-logo h2 {
+            color: #c8a96e;
+            font-size: 1.8rem;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            color: #a0a0a0;
+            text-decoration: none;
+            padding: 0.8rem 1rem;
+            display: block;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: rgba(200, 169, 110, 0.2);
+            color: #c8a96e;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 2rem;
+        }
+
+        .top-bar {
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .chart-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-card h3 {
+            color: #1a1a2e;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .kpi-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #c8a96e;
+        }
+
+        .kpi-label {
+            color: #666;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <h2>☕ KCFMS</h2>
+            <small>Analytics</small>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="/dashboard">📊 Dashboard</a></li>
+            <li><a href="/analytics" class="active">📈 Analytics</a></li>
+            <li><a href="/reports">📋 Reports</a></li>
+            <li><a href="/logout">🚪 Logout</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="top-bar">
+            <h2>Advanced Analytics</h2>
+        </div>
+
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-value" id="total-farmers">0</div>
+                <div class="kpi-label">Total Farmers</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value" id="total-deliveries">0</div>
+                <div class="kpi-label">Total Deliveries</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value" id="avg-quality">0</div>
+                <div class="kpi-label">Avg Quality Score</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value" id="revenue">0</div>
+                <div class="kpi-label">Total Revenue (KSh)</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3>📊 Quality Distribution</h3>
+                <div class="chart-container">
+                    <canvas id="qualityChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>📈 Monthly Production Trend</h3>
+                <div class="chart-container">
+                    <canvas id="productionChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>🎯 Top Performing Farmers</h3>
+                <div class="chart-container">
+                    <canvas id="topFarmersChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>💰 Payment Status</h3>
+                <div class="chart-container">
+                    <canvas id="paymentChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fetch data and create charts
+        fetch('/api/analytics-data')
+            .then(response => response.json())
+            .then(data => {
+                // Update KPIs
+                document.getElementById('total-farmers').textContent = data.total_farmers;
+                document.getElementById('total-deliveries').textContent = data.total_deliveries;
+                document.getElementById('avg-quality').textContent = data.avg_quality;
+                document.getElementById('revenue').textContent = data.total_revenue.toLocaleString();
+
+                // Quality Distribution Pie Chart
+                new Chart(document.getElementById('qualityChart'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Premium', 'Grade A', 'Grade B', 'Grade C'],
+                        datasets: [{
+                            data: data.quality_distribution,
+                            backgroundColor: ['#FFD700', '#4CAF50', '#2196F3', '#FF9800']
+                        }]
+                    }
+                });
+
+                // Monthly Production Line Chart
+                new Chart(document.getElementById('productionChart'), {
+                    type: 'line',
+                    data: {
+                        labels: data.months,
+                        datasets: [{
+                            label: 'Production (kg)',
+                            data: data.monthly_production,
+                            borderColor: '#c8a96e',
+                            backgroundColor: 'rgba(200, 169, 110, 0.1)',
+                            tension: 0.4
+                        }]
+                    }
+                });
+
+                // Top Farmers Bar Chart
+                new Chart(document.getElementById('topFarmersChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: data.top_farmers_names,
+                        datasets: [{
+                            label: 'Total Delivered (kg)',
+                            data: data.top_farmers_values,
+                            backgroundColor: '#c8a96e'
+                        }]
+                    }
+                });
+
+                // Payment Status Pie Chart
+                new Chart(document.getElementById('paymentChart'), {
+                    type: 'pie',
+                    data: {
+                        labels: ['Paid', 'Pending'],
+                        datasets: [{
+                            data: [data.paid_amount, data.pending_amount],
+                            backgroundColor: ['#28a745', '#ffc107']
+                        }]
+                    }
+                });
+            });
+    </script>
+</body>
+</html>

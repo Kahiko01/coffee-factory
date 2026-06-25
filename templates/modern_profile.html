@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Karuhiu Utheri</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-gradient-dark: linear-gradient(135deg, #09150d 0%, #0d1f14 50%, #1a1612 100%);
+            --panel-bg: rgba(13, 27, 18, 0.45);
+            --panel-border: rgba(255, 255, 255, 0.06);
+            --text-main: #e1ede6;
+            --text-muted: #8fa396;
+            --emerald: #10b981;
+            --gold: #d4af37;
+            --coffee: #5c4033;
+            --transition-smooth: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: var(--bg-gradient-dark); color: var(--text-main); min-height:100vh; }
+        body::before { content:''; position:fixed; top:0; left:0; width:100%; height:100%; background-image:url('https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&q=80&w=1920'); background-size:cover; opacity:0.04; z-index:-2; }
+        .glass-panel { background: var(--panel-bg); backdrop-filter: blur(20px); border:1px solid var(--panel-border); border-radius:24px; }
+        .app-container { display:grid; grid-template-columns:280px 1fr; min-height:100vh; padding:24px; gap:24px; }
+        .sidebar { padding:32px 24px; height:calc(100vh - 48px); position:sticky; top:24px; }
+        .sidebar-brand h2 { font-family:'Playfair Display', serif; font-size:1.4rem; background:linear-gradient(to right, var(--gold), #fff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .sidebar-brand small { color:var(--emerald); font-size:0.75rem; letter-spacing:2px; text-transform:uppercase; font-weight:700; }
+        .sidebar-nav { list-style:none; display:flex; flex-direction:column; gap:8px; margin-top:40px; }
+        .sidebar-nav a { display:flex; align-items:center; gap:16px; color:var(--text-muted); text-decoration:none; padding:14px 18px; border-radius:14px; font-weight:500; transition:var(--transition-smooth); }
+        .sidebar-nav a:hover, .sidebar-nav a.active { color:#fff; background:linear-gradient(135deg, rgba(16,185,129,0.25), rgba(92,64,51,0.25)); border-left:4px solid var(--gold); }
+        .dashboard-view { display:flex; flex-direction:column; gap:24px; }
+        .profile-header { display:flex; align-items:center; gap:24px; padding:32px; }
+        .avatar-large { width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg, var(--coffee), var(--gold)); display:grid; place-items:center; font-size:2rem; color:#fff; font-weight:700; }
+        .info-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:20px; padding:24px; }
+        .info-item { padding:16px; background:rgba(255,255,255,0.02); border-radius:12px; }
+        .info-item label { display:block; color:var(--text-muted); font-size:0.8rem; margin-bottom:4px; }
+        .info-item .value { font-size:1.1rem; font-weight:600; }
+        .badge-active { display:inline-block; padding:4px 12px; background:rgba(16,185,129,0.2); border:1px solid var(--emerald); color:var(--emerald); border-radius:20px; font-size:0.8rem; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="glass-panel sidebar">
+            <div class="sidebar-brand">
+                <h2>Karuhiu Utheri</h2>
+                <small>Digital Farmers Co-op</small>
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="/farmer/modern-dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+                <li><a href="/farmer/modern-deliveries"><i class="fa-solid fa-truck"></i> Deliveries</a></li>
+                <li><a href="/farmer/modern-payments"><i class="fa-solid fa-credit-card"></i> Payments</a></li>
+                <li><a href="/farmer/modern-profile" class="active"><i class="fa-solid fa-user"></i> Profile</a></li>
+                <li><a href="/farmer/modern-notifications"><i class="fa-solid fa-bell"></i> Notifications</a></li>
+                <li><a href="/change-password"><i class="fa-solid fa-lock"></i> Security</a></li>
+                <li><a href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+            </ul>
+        </aside>
+        <main class="dashboard-view">
+            <div class="glass-panel profile-header">
+                <div class="avatar-large">{{ current_user.full_name[:2].upper() }}</div>
+                <div>
+                    <h1 style="font-family:'Playfair Display',serif;">{{ current_user.full_name }}</h1>
+                    <p style="color:var(--text-muted);">Member #{{ current_user.membership_number }}</p>
+                    <span class="badge-active"><i class="fa-solid fa-circle"></i> Active Member</span>
+                </div>
+            </div>
+            <div class="glass-panel">
+                <div class="info-grid">
+                    <div class="info-item"><label>Username</label><div class="value">{{ current_user.username }}</div></div>
+                    <div class="info-item"><label>Phone</label><div class="value">{{ current_user.phone or 'N/A' }}</div></div>
+                    <div class="info-item"><label>Email</label><div class="value">{{ current_user.email or 'N/A' }}</div></div>
+                    <div class="info-item"><label>Member Since</label><div class="value">{{ current_user.created_at.strftime('%B %Y') }}</div></div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

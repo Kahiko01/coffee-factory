@@ -1,0 +1,4 @@
+username,full_name,phone,membership_number,password
+test_farmer1,Test Farmer One,+254700000101,FARM0101,test123
+test_farmer2,Test Farmer Two,+254700000102,FARM0102,test123
+test_farmer3,Test Farmer Three,+254700000103,FARM0103,test123

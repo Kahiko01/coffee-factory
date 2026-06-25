@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payments - Karuhiu Utheri</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-gradient-dark: linear-gradient(135deg, #09150d 0%, #0d1f14 50%, #1a1612 100%);
+            --panel-bg: rgba(13, 27, 18, 0.45);
+            --panel-border: rgba(255, 255, 255, 0.06);
+            --text-main: #e1ede6;
+            --text-muted: #8fa396;
+            --emerald: #10b981;
+            --gold: #d4af37;
+            --transition-smooth: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: var(--bg-gradient-dark); color: var(--text-main); min-height:100vh; }
+        body::before { content:''; position:fixed; top:0; left:0; width:100%; height:100%; background-image:url('https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&q=80&w=1920'); background-size:cover; opacity:0.04; z-index:-2; }
+        .glass-panel { background: var(--panel-bg); backdrop-filter: blur(20px); border:1px solid var(--panel-border); border-radius:24px; }
+        .app-container { display:grid; grid-template-columns:280px 1fr; min-height:100vh; padding:24px; gap:24px; }
+        .sidebar { padding:32px 24px; height:calc(100vh - 48px); position:sticky; top:24px; }
+        .sidebar-brand h2 { font-family:'Playfair Display', serif; font-size:1.4rem; background:linear-gradient(to right, var(--gold), #fff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .sidebar-brand small { color:var(--emerald); font-size:0.75rem; letter-spacing:2px; text-transform:uppercase; font-weight:700; }
+        .sidebar-nav { list-style:none; display:flex; flex-direction:column; gap:8px; margin-top:40px; }
+        .sidebar-nav a { display:flex; align-items:center; gap:16px; color:var(--text-muted); text-decoration:none; padding:14px 18px; border-radius:14px; font-weight:500; transition:var(--transition-smooth); }
+        .sidebar-nav a:hover, .sidebar-nav a.active { color:#fff; background:linear-gradient(135deg, rgba(16,185,129,0.25), rgba(92,64,51,0.25)); border-left:4px solid var(--gold); }
+        .dashboard-view { display:flex; flex-direction:column; gap:24px; }
+        .top-navbar { display:flex; justify-content:space-between; align-items:center; padding:16px 32px; }
+        .stat-card { padding:24px; text-align:center; }
+        .stat-card h3 { font-size:2rem; color:var(--gold); }
+        .premium-table { width:100%; border-collapse:separate; border-spacing:0 10px; }
+        .premium-table th { padding:12px 18px; color:var(--text-muted); font-size:0.8rem; text-transform:uppercase; text-align:left; }
+        .premium-table tbody tr { background:rgba(255,255,255,0.02); }
+        .premium-table td { padding:16px 18px; border-top:1px solid var(--panel-border); border-bottom:1px solid var(--panel-border); }
+        .premium-table td:first-child { border-left:1px solid var(--panel-border); border-radius:14px 0 0 14px; }
+        .premium-table td:last-child { border-right:1px solid var(--panel-border); border-radius:0 14px 14px 0; }
+        .status-paid { color:var(--emerald); }
+        .status-pending { color:#f59e0b; }
+        .btn { padding:10px 20px; border-radius:10px; text-decoration:none; font-weight:600; transition:var(--transition-smooth); display:inline-block; }
+        .btn-gold { background:var(--gold); color:#000; }
+        .btn-gold:hover { box-shadow:0 0 20px rgba(212,175,55,0.4); }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="glass-panel sidebar">
+            <div class="sidebar-brand">
+                <h2>Karuhiu Utheri</h2>
+                <small>Digital Farmers Co-op</small>
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="/farmer/modern-dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+                <li><a href="/farmer/modern-deliveries"><i class="fa-solid fa-truck"></i> Deliveries</a></li>
+                <li><a href="/farmer/modern-payments" class="active"><i class="fa-solid fa-credit-card"></i> Payments</a></li>
+                <li><a href="/farmer/modern-profile"><i class="fa-solid fa-user"></i> Profile</a></li>
+                <li><a href="/farmer/modern-notifications"><i class="fa-solid fa-bell"></i> Notifications</a></li>
+                <li><a href="/change-password"><i class="fa-solid fa-lock"></i> Security</a></li>
+                <li><a href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+            </ul>
+        </aside>
+        <main class="dashboard-view">
+            <nav class="glass-panel top-navbar">
+    <h2 style="font-family:'Playfair Display',serif;">💰 Payment History</h2>
+    <div style="display:flex;gap:10px;">
+        <a href="/farmer/statement/download?format=pdf" class="btn btn-gold">
+            <i class="fa-solid fa-file-pdf"></i> Download PDF Statement
+        </a>
+        <a href="/farmer/statement/download?format=excel" class="btn btn-gold" style="background:transparent;border:1px solid var(--gold);color:var(--gold);">
+            <i class="fa-solid fa-file-excel"></i> Export Excel
+        </a>
+    </div>
+</nav>
+
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+                <div class="glass-panel stat-card">
+                    <div style="color:var(--text-muted);font-size:0.85rem;">Total Earned</div>
+                    <h3>KES {{ "%.2f"|format(total_earned) }}</h3>
+                </div>
+                <div class="glass-panel stat-card">
+                    <div style="color:var(--text-muted);font-size:0.85rem;">Total Paid</div>
+                    <h3 style="color:var(--emerald);">KES {{ "%.2f"|format(total_paid) }}</h3>
+                </div>
+                <div class="glass-panel stat-card">
+                    <div style="color:var(--text-muted);font-size:0.85rem;">Pending</div>
+                    <h3 style="color:#f59e0b;">KES {{ "%.2f"|format(outstanding) }}</h3>
+                </div>
+            </div>
+            <div class="glass-panel" style="padding:24px;">
+                <table class="premium-table">
+                    <thead><tr><th>Date</th><th>Amount Earned</th><th>Deductions</th><th>Net Payment</th><th>Status</th></tr></thead>
+                    <tbody>
+                        {% for p in payments %}
+                        <tr>
+                            <td>{{ p.payment_date.strftime('%b %d, %Y') }}</td>
+                            <td>KES {{ "%.2f"|format(p.amount_earned) }}</td>
+                            <td>KES {{ "%.2f"|format(p.deductions) }}</td>
+                            <td><strong>KES {{ "%.2f"|format(p.net_payment) }}</strong></td>
+                            <td class="{% if p.status == 'paid' %}status-paid{% else %}status-pending{% endif %}">
+                                <i class="fa-solid fa-{% if p.status == 'paid' %}circle-check{% else %}clock{% endif %}"></i> {{ p.status|title }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

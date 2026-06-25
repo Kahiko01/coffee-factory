@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - KCFMS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+            padding: 2rem 1rem;
+            color: white;
+        }
+
+        .sidebar-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-logo h2 {
+            color: #c8a96e;
+            font-size: 1.8rem;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            color: #a0a0a0;
+            text-decoration: none;
+            padding: 0.8rem 1rem;
+            display: block;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: rgba(200, 169, 110, 0.2);
+            color: #c8a96e;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 2rem;
+        }
+
+        .top-bar {
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .card h3 {
+            color: #1a1a2e;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #c8a96e;
+        }
+
+        .report-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: #c8a96e;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 400px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .placeholder-chart {
+            text-align: center;
+            color: #666;
+        }
+
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .report-table th {
+            background: #f5f5f5;
+            padding: 1rem;
+            text-align: left;
+            color: #666;
+        }
+
+        .report-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 300px;
+            padding: 1rem;
+        }
+
+        .bar {
+            width: 60px;
+            background: linear-gradient(to top, #c8a96e, #d4b87a);
+            border-radius: 5px 5px 0 0;
+            transition: all 0.3s;
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .bar:hover {
+            opacity: 0.8;
+            transform: scaleY(1.05);
+        }
+
+        .bar-label {
+            position: absolute;
+            bottom: -25px;
+            color: #333;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <h2>☕ KCFMS</h2>
+            <small>Reports</small>
+        </div>
+        <ul class="sidebar-nav">
+            {% if current_user.role == 'staff' %}
+            <li><a href="/staff/record-delivery">📝 Record Delivery</a></li>
+            {% else %}
+            <li><a href="/admin">📊 Dashboard</a></li>
+            {% endif %}
+            <li><a href="/reports" class="active">📈 Reports</a></li>
+            <li><a href="/logout">🚪 Logout</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="top-bar">
+            <h2>Reports & Analytics</h2>
+        </div>
+
+        <div class="report-buttons">
+    <button class="btn btn-primary" onclick="loadReport('farmer_produce')">
+        📊 Farmer Produce Report
+    </button>
+    <button class="btn btn-primary" onclick="loadReport('monthly_yield')">
+        📅 Monthly Yield Report
+    </button>
+    <a href="/api/report-data?type=farmer_produce&format=csv" class="btn btn-success">
+        📥 Export CSV
+    </a>
+    <a href="/api/report-pdf?type=farmer_produce" class="btn btn-primary">
+        📄 Export PDF
+    </a>
+</div>
+
+        <div class="card">
+            <h3 id="reportTitle">Report View</h3>
+            <div id="reportContent">
+                <div class="chart-container">
+                    <div class="placeholder-chart">
+                        <p style="font-size: 3rem;">📊</p>
+                        <p>Select a report type above to view data</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function loadReport(type) {
+            fetch(`/api/report-data?type=${type}&format=json`)
+                .then(response => response.json())
+                .then(data => {
+                    const reportTitle = document.getElementById('reportTitle');
+                    const reportContent = document.getElementById('reportContent');
+                    
+                    if (type === 'farmer_produce') {
+                        reportTitle.textContent = 'Farmer Produce Report';
+                        reportContent.innerHTML = `
+                            <table class="report-table">
+                                <thead>
+                                    <tr>
+                                        <th>Farmer Name</th>
+                                        <th>Total Quantity (kg)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${data.map(item => `
+                                        <tr>
+                                            <td>${item.label}</td>
+                                            <td><strong>${item.value.toFixed(1)}</strong></td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        `;
+                    } else if (type === 'monthly_yield') {
+                        reportTitle.textContent = 'Monthly Yield Report';
+                        const maxValue = Math.max(...data.map(item => item.value));
+                        
+                        reportContent.innerHTML = `
+                            <div class="bar-chart">
+                                ${data.map(item => `
+                                    <div style="display: flex; flex-direction: column; align-items: center;">
+                                        <div class="bar" style="height: ${(item.value / maxValue) * 250}px;">
+                                            <span style="margin-top: -20px;">${item.value.toFixed(1)}</span>
+                                        </div>
+                                        <div class="bar-label">${item.label}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading report:', error);
+                    document.getElementById('reportContent').innerHTML = 
+                        '<p style="color: red;">Error loading report data. Please try again.</p>';
+                });
+        }
+    </script>
+</body>
+</html>
