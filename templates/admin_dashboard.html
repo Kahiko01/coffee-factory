@@ -1,399 +1,156 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - KCFMS</title>
+    <title>Admin Panel - Karuhiu Utheri</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --bg-gradient-dark: linear-gradient(135deg, #09150d 0%, #0d1f14 50%, #1a1612 100%);
+            --panel-bg: rgba(13, 27, 18, 0.45);
+            --panel-border: rgba(255, 255, 255, 0.06);
+            --text-main: #e1ede6;
+            --text-muted: #8fa396;
+            --emerald: #10b981;
+            --gold: #d4af37;
+            --coffee: #5c4033;
+            --transition-smooth: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
-        }
-
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 250px;
-            height: 100vh;
-            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
-            padding: 2rem 1rem;
-            color: white;
-        }
-
-        .sidebar-logo {
-            text-align: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar-logo h2 {
-            color: #c8a96e;
-            font-size: 1.8rem;
-        }
-
-        .sidebar-nav {
-            list-style: none;
-        }
-
-        .sidebar-nav li {
-            margin-bottom: 0.5rem;
-        }
-
-        .sidebar-nav a {
-            color: #a0a0a0;
-            text-decoration: none;
-            padding: 0.8rem 1rem;
-            display: block;
-            border-radius: 10px;
-            transition: all 0.3s;
-        }
-
-        .sidebar-nav a:hover,
-        .sidebar-nav a.active {
-            background: rgba(200, 169, 110, 0.2);
-            color: #c8a96e;
-        }
-
-        .main-content {
-            margin-left: 250px;
-            padding: 2rem;
-        }
-
-        .top-bar {
-            background: white;
-            padding: 1rem 2rem;
-            border-radius: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 15px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .stat-card .label {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-card .value {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #1a1a2e;
-        }
-
-        .content-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 15px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .card h3 {
-            color: #1a1a2e;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid #c8a96e;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #333;
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 0.9rem;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .btn {
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s;
-            font-size: 0.9rem;
-        }
-
-        .btn-primary {
-            background: #c8a96e;
-            color: white;
-        }
-
-        .btn-danger {
-            background: #dc3545;
-            color: white;
-        }
-
-        .btn-success {
-            background: #28a745;
-            color: white;
-        }
-
-        .btn:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-        }
-
-        .alert {
-            padding: 1rem;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-        }
-
-        .alert-success {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .farmer-list {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .farmer-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.8rem;
-            border-bottom: 1px solid #eee;
-        }
-
-        .farmer-item:hover {
-            background: #f9f9f9;
-        }
+        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: var(--bg-gradient-dark); color: var(--text-main); min-height:100vh; }
+        body::before { content:''; position:fixed; top:0; left:0; width:100%; height:100%; background-image:url('https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&q=80&w=1920'); background-size:cover; opacity:0.04; z-index:-2; }
+        .glass-panel { background: var(--panel-bg); backdrop-filter: blur(20px); border:1px solid var(--panel-border); border-radius:24px; }
+        .app-container { display:grid; grid-template-columns:280px 1fr; min-height:100vh; padding:24px; gap:24px; }
+        .sidebar { padding:32px 24px; height:calc(100vh - 48px); position:sticky; top:24px; }
+        .sidebar-brand h2 { font-family:'Playfair Display', serif; font-size:1.4rem; background:linear-gradient(to right, var(--gold), #fff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .sidebar-brand small { color:var(--emerald); font-size:0.75rem; letter-spacing:2px; text-transform:uppercase; font-weight:700; }
+        .sidebar-nav { list-style:none; display:flex; flex-direction:column; gap:8px; margin-top:40px; }
+        .sidebar-nav a { display:flex; align-items:center; gap:16px; color:var(--text-muted); text-decoration:none; padding:14px 18px; border-radius:14px; font-weight:500; transition:var(--transition-smooth); }
+        .sidebar-nav a:hover, .sidebar-nav a.active { color:#fff; background:linear-gradient(135deg, rgba(16,185,129,0.25), rgba(92,64,51,0.25)); border-left:4px solid var(--gold); }
+        .dashboard-view { display:flex; flex-direction:column; gap:24px; }
+        .top-navbar { display:flex; justify-content:space-between; align-items:center; padding:16px 32px; }
+        .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+        .stat-card { padding:24px; text-align:center; }
+        .stat-card h3 { font-size:2rem; color:var(--gold); }
+        .stat-card .label { color:var(--text-muted); font-size:0.85rem; }
+        .content-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+        .card { padding:24px; }
+        .card h3 { margin-bottom:20px; padding-bottom:10px; border-bottom:2px solid var(--gold); }
+        .form-group { margin-bottom:16px; }
+        .form-group label { display:block; color:var(--text-muted); font-size:0.8rem; margin-bottom:6px; }
+        .form-group input, .form-group select, .form-group textarea { width:100%; padding:12px; background:rgba(255,255,255,0.03); border:1px solid var(--panel-border); border-radius:12px; color:var(--text-main); font-size:0.9rem; }
+        .form-group input:focus, .form-group textarea:focus { outline:none; border-color:var(--gold); }
+        .btn { padding:10px 20px; border:none; border-radius:10px; cursor:pointer; font-weight:600; transition:var(--transition-smooth); }
+        .btn-gold { background:var(--gold); color:#000; }
+        .btn-gold:hover { box-shadow:0 0 20px rgba(212,175,55,0.4); }
+        .btn-danger { background:#dc3545; color:#fff; }
+        .btn-success { background:var(--emerald); color:#fff; }
+        .farmer-list { max-height:400px; overflow-y:auto; }
+        .farmer-item { display:flex; justify-content:space-between; align-items:center; padding:12px; border-bottom:1px solid var(--panel-border); }
+        .farmer-item:hover { background:rgba(255,255,255,0.02); }
+        .badge { padding:4px 10px; border-radius:20px; font-size:0.75rem; font-weight:600; }
+        .badge-active { background:rgba(16,185,129,0.2); color:var(--emerald); }
+        .badge-suspended { background:rgba(239,68,68,0.2); color:#ef4444; }
+        .alert { padding:12px; border-radius:10px; margin-bottom:16px; }
+        .alert-success { background:rgba(16,185,129,0.15); color:var(--emerald); }
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <div class="sidebar-logo">
-            <h2>☕ KCFMS</h2>
-            <small>Admin Panel</small>
-        </div>
-        <ul class="sidebar-nav">
-            <li><a href="/admin" class="active">📊 Dashboard</a></li>
-            <li><a href="#" onclick="showAddFarmerModal()">👨‍🌾 Add Farmer</a></li>
-            <li><a href="/reports">📈 Reports</a></li>
-            <li><a href="/logout">🚪 Logout</a></li>
-        </ul>
+    <div class="app-container">
+        <aside class="glass-panel sidebar">
+            <div class="sidebar-brand">
+                <h2>Karuhiu Utheri</h2>
+                <small>Admin Panel</small>
+            </div>
+                        <ul class="sidebar-nav">
+                <li><a href="/admin" class="active"><i class="fa-solid fa-gauge"></i> Dashboard</a></li>
+                <li><a href="/staff/record-delivery"><i class="fa-solid fa-truck"></i> Record Delivery</a></li>
+                <li><a href="/analytics"><i class="fa-solid fa-chart-line"></i> Analytics</a></li>
+                <li><a href="/admin"><i class="fa-solid fa-users"></i> Farmers</a></li>
+                <li><a href="/reports"><i class="fa-solid fa-file"></i> Reports</a></li>
+                <li><a href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+            </ul>
+
+        </aside>
+        <main class="dashboard-view">
+            <nav class="glass-panel top-navbar">
+                <h2 style="font-family:'Playfair Display',serif;">🛡️ Admin Control Panel</h2>
+                <span style="color:var(--gold);">{{ current_user.full_name }}</span>
+            </nav>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="stats-grid">
+                <div class="glass-panel stat-card">
+                    <div class="label">Total Farmers</div>
+                    <h3>{{ total_farmers }}</h3>
+                </div>
+                <div class="glass-panel stat-card">
+                    <div class="label">Active Farmers</div>
+                    <h3 style="color:var(--emerald);">{{ active_farmers }}</h3>
+                </div>
+                <div class="glass-panel stat-card">
+                    <div class="label">Total Deliveries</div>
+                    <h3>{{ total_deliveries }}</h3>
+                </div>
+                <div class="glass-panel stat-card">
+                    <div class="label">Revenue (KES)</div>
+                    <h3>{{ "%.0f"|format(total_payments) }}</h3>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <div class="glass-panel card">
+                    <h3>💰 Update Coffee Prices</h3>
+                    <form method="POST" action="/admin/update-prices">
+                        <div class="form-group"><label>Premium Grade (KES/kg)</label><input type="number" name="price_Premium" step="0.01" value="5.50" required></div>
+                        <div class="form-group"><label>Grade A (KES/kg)</label><input type="number" name="price_A" step="0.01" value="4.50" required></div>
+                        <div class="form-group"><label>Grade B (KES/kg)</label><input type="number" name="price_B" step="0.01" value="3.50" required></div>
+                        <div class="form-group"><label>Grade C (KES/kg)</label><input type="number" name="price_C" step="0.01" value="2.50" required></div>
+                        <button type="submit" class="btn btn-gold"><i class="fa-solid fa-check"></i> Update Prices</button>
+                    </form>
+                </div>
+
+                <div class="glass-panel card">
+                    <h3>📢 Create Announcement</h3>
+                    <form method="POST" action="/admin/announcements">
+                        <div class="form-group"><label>Title</label><input type="text" name="title" required></div>
+                        <div class="form-group"><label>Content</label><textarea name="content" rows="3" required></textarea></div>
+                        <button type="submit" class="btn btn-gold"><i class="fa-solid fa-bullhorn"></i> Post Announcement</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="glass-panel card">
+                <h3>👨‍🌾 Manage Farmers</h3>
+                <div class="farmer-list">
+                    {% for farmer in farmers %}
+                    <div class="farmer-item">
+                        <div>
+                            <strong>{{ farmer.full_name }}</strong><br>
+                            <small style="color:var(--text-muted);">{{ farmer.membership_number }} | {{ farmer.phone or 'N/A' }}</small>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <span class="badge {% if farmer.is_active %}badge-active{% else %}badge-suspended{% endif %}">
+                                {{ 'Active' if farmer.is_active else 'Suspended' }}
+                            </span>
+                            <a href="/admin/toggle-farmer/{{ farmer.id }}" class="btn {% if farmer.is_active %}btn-danger{% else %}btn-success{% endif %}" style="font-size:0.8rem;">
+                                {{ 'Suspend' if farmer.is_active else 'Activate' }}
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </main>
     </div>
-
-    <div class="main-content">
-        <div class="top-bar">
-            <h2>Admin Dashboard</h2>
-            <span>Welcome, {{ current_user.full_name }}</span>
-        </div>
-
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="label">Total Farmers</div>
-                <div class="value">{{ total_farmers }}</div>
-            </div>
-            <div class="stat-card">
-                <div class="label">Active Farmers</div>
-                <div class="value">{{ active_farmers }}</div>
-            </div>
-            <div class="stat-card">
-                <div class="label">Total Deliveries</div>
-                <div class="value">{{ total_deliveries }}</div>
-            </div>
-            <div class="stat-card">
-                <div class="label">Monthly Deliveries</div>
-                <div class="value">{{ monthly_deliveries }}</div>
-            </div>
-        </div>
-
-        <div class="content-grid">
-            <div class="card">
-                <h3>Update Coffee Prices</h3>
-                <form method="POST" action="/admin/update-prices">
-                    <div class="form-group">
-                        <label>Premium Grade ($/kg)</label>
-                        <input type="number" name="price_Premium" step="0.01" value="5.50" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Grade A ($/kg)</label>
-                        <input type="number" name="price_A" step="0.01" value="4.50" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Grade B ($/kg)</label>
-                        <input type="number" name="price_B" step="0.01" value="3.50" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Grade C ($/kg)</label>
-                        <input type="number" name="price_C" step="0.01" value="2.50" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Update Prices</button>
-                </form>
-            </div>
-
-            <div class="card">
-                <h3>Create Announcement</h3>
-                <form method="POST" action="/admin/announcements">
-                    <div class="form-group">
-                        <label>Title</label>
-                        <input type="text" name="title" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Content</label>
-                        <textarea name="content" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Post Announcement</button>
-                </form>
-            </div>
-        </div>
-
-        <div class="card">
-    <h3>Manage Farmers</h3>
-    <div class="farmer-list">
-        {% for farmer in farmers %}
-                <div class="farmer-item">
-                    <div>
-                        <strong>{{ farmer.full_name }}</strong><br>
-                        <small>{{ farmer.membership_number }} | {{ farmer.phone }}</small>
-                    </div>
-                    <div>
-                        <span style="color: {{ 'green' if farmer.is_active else 'red' }};">
-                            {{ 'Active' if farmer.is_active else 'Suspended' }}
-                        </span>
-                        <a href="/admin/toggle-farmer/{{ farmer.id }}" 
-                           class="btn {{ 'btn-danger' if farmer.is_active else 'btn-success' }}"
-                           style="margin-left: 1rem;">
-                            {{ 'Suspend' if farmer.is_active else 'Activate' }}
-                        </a>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-
-    <!-- Add Farmer Modal -->
-    <div id="addFarmerModal" class="modal">
-        <div class="modal-content">
-            <h3>Add New Farmer</h3>
-            <form method="POST" action="/admin/add-farmer">
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" name="full_name" required>
-                </div>
-                <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" name="username" required>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" name="password" required>
-                </div>
-                <div class="form-group">
-                    <label>Phone Number</label>
-                    <input type="tel" name="phone">
-                </div>
-                <div class="form-group">
-                    <label>Membership Number</label>
-                    <input type="text" name="membership_number" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Add Farmer</button>
-                <button type="button" class="btn btn-danger" onclick="hideAddFarmerModal()">Cancel</button>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        function showAddFarmerModal() {
-            document.getElementById('addFarmerModal').style.display = 'flex';
-        }
-
-        function hideAddFarmerModal() {
-            document.getElementById('addFarmerModal').style.display = 'none';
-        }
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('addFarmerModal')) {
-                hideAddFarmerModal();
-            }
-        }
-    </script>
 </body>
 </html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Record Delivery - Karuhiu Utheri</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-gradient-dark: linear-gradient(135deg, #09150d 0%, #0d1f14 50%, #1a1612 100%);
+            --panel-bg: rgba(13, 27, 18, 0.45);
+            --panel-border: rgba(255, 255, 255, 0.06);
+            --text-main: #e1ede6;
+            --text-muted: #8fa396;
+            --emerald: #10b981;
+            --gold: #d4af37;
+            --transition-smooth: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: var(--bg-gradient-dark); color: var(--text-main); min-height:100vh; }
+        body::before { content:''; position:fixed; top:0; left:0; width:100%; height:100%; background-image:url('https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&q=80&w=1920'); background-size:cover; opacity:0.04; z-index:-2; }
+        .glass-panel { background: var(--panel-bg); backdrop-filter: blur(20px); border:1px solid var(--panel-border); border-radius:24px; }
+        .app-container { display:grid; grid-template-columns:280px 1fr; min-height:100vh; padding:24px; gap:24px; }
+        .sidebar { padding:32px 24px; height:calc(100vh - 48px); position:sticky; top:24px; }
+        .sidebar-brand h2 { font-family:'Playfair Display', serif; font-size:1.4rem; background:linear-gradient(to right, var(--gold), #fff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .sidebar-brand small { color:var(--emerald); font-size:0.75rem; letter-spacing:2px; text-transform:uppercase; font-weight:700; }
+        .sidebar-nav { list-style:none; display:flex; flex-direction:column; gap:8px; margin-top:40px; }
+        .sidebar-nav a { display:flex; align-items:center; gap:16px; color:var(--text-muted); text-decoration:none; padding:14px 18px; border-radius:14px; font-weight:500; transition:var(--transition-smooth); }
+        .sidebar-nav a:hover, .sidebar-nav a.active { color:#fff; background:linear-gradient(135deg, rgba(16,185,129,0.25), rgba(92,64,51,0.25)); border-left:4px solid var(--gold); }
+        .dashboard-view { display:flex; flex-direction:column; gap:24px; }
+        .top-navbar { display:flex; justify-content:space-between; align-items:center; padding:16px 32px; }
+        .card { padding:32px; max-width:600px; margin:0 auto; }
+        .card h3 { font-family:'Playfair Display',serif; color:var(--gold); text-align:center; margin-bottom:24px; font-size:1.3rem; }
+        .form-group { margin-bottom:20px; position:relative; }
+        .form-group label { display:block; color:var(--text-muted); font-size:0.85rem; margin-bottom:6px; }
+        .form-group input, .form-group select { width:100%; padding:14px 16px; background:rgba(255,255,255,0.03); border:1px solid var(--panel-border); border-radius:14px; color:var(--text-main); font-size:1rem; transition:var(--transition-smooth); }
+        .form-group input:focus, .form-group select:focus { outline:none; border-color:var(--gold); box-shadow:0 0 20px rgba(212,175,55,0.1); }
+        .form-group select { cursor:pointer; }
+        .form-group select option { background:#0d1f14; color:#fff; }
+        .btn { width:100%; padding:16px; border:none; border-radius:14px; font-size:1rem; font-weight:600; cursor:pointer; transition:var(--transition-smooth); }
+        .btn-gold { background:linear-gradient(135deg, var(--gold), #b8941f); color:#000; }
+        .btn-gold:hover { transform:translateY(-2px); box-shadow:0 10px 40px rgba(212,175,55,0.3); }
+        .alert { padding:12px 16px; border-radius:12px; margin-bottom:16px; text-align:center; }
+        .alert-success { background:rgba(16,185,129,0.1); color:var(--emerald); border:1px solid rgba(16,185,129,0.3); }
+        .search-results { position:absolute; top:100%; left:0; right:0; background:rgba(13,27,18,0.95); border:1px solid var(--panel-border); border-radius:12px; max-height:200px; overflow-y:auto; z-index:10; display:none; }
+        .search-result-item { padding:12px 16px; cursor:pointer; border-bottom:1px solid var(--panel-border); }
+        .search-result-item:hover { background:rgba(16,185,129,0.1); }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="glass-panel sidebar">
+            <div class="sidebar-brand">
+                <h2>Karuhiu Utheri</h2>
+                <small>Staff Portal</small>
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="/staff/record-delivery" class="active"><i class="fa-solid fa-truck"></i> Record Delivery</a></li>
+                <li><a href="/admin"><i class="fa-solid fa-gauge"></i> Dashboard</a></li>
+                <li><a href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+            </ul>
+        </aside>
+        <main class="dashboard-view">
+            <nav class="glass-panel top-navbar">
+                <h2 style="font-family:'Playfair Display',serif;">📝 Record Coffee Delivery</h2>
+                <span style="color:var(--gold);">{{ current_user.full_name }}</span>
+            </nav>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="glass-panel card">
+                <h3>New Delivery Entry</h3>
+                <form method="POST">
+                    <div class="form-group">
+                        <label>Search Farmer</label>
+                        <input type="text" id="farmer_search" placeholder="Type farmer name or member number..." autocomplete="off">
+                        <div class="search-results" id="search_results"></div>
+                        <input type="hidden" id="farmer_id" name="farmer_id" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Quantity</label>
+                        <input type="number" name="quantity" step="0.01" placeholder="Enter quantity" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Unit</label>
+                        <select name="unit" required>
+                            <option value="kg">Kilograms (kg)</option>
+                            <option value="liters">Liters</option>
+                            <option value="bags">Bags</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Quality Grade</label>
+                        <select name="quality_grade" required>
+                            <option value="Premium">Premium</option>
+                            <option value="A">Grade A</option>
+                            <option value="B">Grade B</option>
+                            <option value="C">Grade C</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Collection Center</label>
+                        <input type="text" name="collection_center" placeholder="Enter collection center" required>
+                    </div>
+                    <button type="submit" class="btn btn-gold">
+                        <i class="fa-solid fa-check-circle"></i> Record Delivery
+                    </button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.getElementById('farmer_search').addEventListener('input', function() {
+            const query = this.value;
+            const resultsDiv = document.getElementById('search_results');
+            
+            if (query.length < 2) {
+                resultsDiv.style.display = 'none';
+                return;
+            }
+            
+            fetch(`/staff/search-farmer?query=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(farmers => {
+                    resultsDiv.innerHTML = '';
+                    if (farmers.length > 0) {
+                        farmers.forEach(farmer => {
+                            const div = document.createElement('div');
+                            div.className = 'search-result-item';
+                            div.innerHTML = `<strong>${farmer.name}</strong><br><small>${farmer.membership} | ${farmer.phone}</small>`;
+                            div.onclick = function() {
+                                document.getElementById('farmer_search').value = `${farmer.name} (${farmer.membership})`;
+                                document.getElementById('farmer_id').value = farmer.id;
+                                resultsDiv.style.display = 'none';
+                            };
+                            resultsDiv.appendChild(div);
+                        });
+                        resultsDiv.style.display = 'block';
+                    } else {
+                        resultsDiv.style.display = 'none';
+                    }
+                });
+        });
+        
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#farmer_search') && !e.target.closest('#search_results')) {
+                document.getElementById('search_results').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

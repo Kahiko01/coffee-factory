@@ -58,11 +58,11 @@
                 <small>Digital Farmers Co-op</small>
             </div>
             <ul class="sidebar-nav">
-                <li><a href="/farmer/modern-dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
-                <li><a href="/farmer/modern-deliveries"><i class="fa-solid fa-truck"></i> Deliveries</a></li>
-                <li><a href="/farmer/modern-payments"><i class="fa-solid fa-credit-card"></i> Payments</a></li>
-                <li><a href="/farmer/modern-profile"><i class="fa-solid fa-user"></i> Profile</a></li>
-                <li><a href="/farmer/modern-notifications" class="active"><i class="fa-solid fa-bell"></i> Notifications{% if notifications %}<span class="badge-count">{{ notifications|selectattr('is_read', 'equalto', false)|list|length }}</span>{% endif %}</a></li>
+                <li><a href="/farmer/dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+                <li><a href="/farmer/deliveries"><i class="fa-solid fa-truck"></i> Deliveries</a></li>
+                <li><a href="/farmer/payments"><i class="fa-solid fa-credit-card"></i> Payments</a></li>
+                <li><a href="/farmer/profile"><i class="fa-solid fa-user"></i> Profile</a></li>
+                <li><a href="/farmer/notifications" class="active"><i class="fa-solid fa-bell"></i> Notifications{% if notifications %}<span class="badge-count">{{ notifications|selectattr('is_read', 'equalto', false)|list|length }}</span>{% endif %}</a></li>
                 <li><a href="/change-password"><i class="fa-solid fa-lock"></i> Security</a></li>
                 <li><a href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
             </ul>

@@ -52,17 +52,29 @@
                 <small>Digital Farmers Co-op</small>
             </div>
             <ul class="sidebar-nav">
-                <li><a href="/farmer/modern-dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
-                <li><a href="/farmer/modern-deliveries" class="active"><i class="fa-solid fa-truck"></i> Deliveries</a></li>
-                <li><a href="/farmer/modern-payments"><i class="fa-solid fa-credit-card"></i> Payments</a></li>
-                <li><a href="/farmer/modern-profile"><i class="fa-solid fa-user"></i> Profile</a></li>
-                <li><a href="/farmer/modern-notifications"><i class="fa-solid fa-bell"></i> Notifications</a></li>
+                <li><a href="/farmer/dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+                <li><a href="/farmer/deliveries" class="active"><i class="fa-solid fa-truck"></i> Deliveries</a></li>
+                <li><a href="/farmer/payments"><i class="fa-solid fa-credit-card"></i> Payments</a></li>
+                <li><a href="/farmer/profile"><i class="fa-solid fa-user"></i> Profile</a></li>
+                <li><a href="/farmer/notifications"><i class="fa-solid fa-bell"></i> Notifications</a></li>
                 <li><a href="/change-password"><i class="fa-solid fa-lock"></i> Security</a></li>
                 <li><a href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
             </ul>
         </aside>
         <main class="dashboard-view">
-            <nav class="glass-panel top-navbar">
+<nav class="glass-panel top-navbar">
+    <h2 style="font-family:'Playfair Display',serif;">📦 My Deliveries</h2>
+    <div style="display:flex;gap:10px;">
+        <a href="/farmer/deliveries/download" class="btn btn-gold" style="background:var(--gold);color:#000;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:600;">
+            <i class="fa-solid fa-file-pdf"></i> Download PDF
+        </a>
+        <div style="display:flex;align-items:center;gap:12px;">
+            <strong>{{ current_user.full_name }}</strong>
+            <span style="color:var(--emerald);">#{{ current_user.membership_number }}</span>
+        </div>
+    </div>
+</nav>            
+<nav class="glass-panel top-navbar">
                 <h2 style="font-family:'Playfair Display',serif;">📦 My Deliveries</h2>
                 <div style="display:flex;align-items:center;gap:12px;">
                     <strong>{{ current_user.full_name }}</strong>
