@@ -15,7 +15,16 @@ from sqlalchemy import func, extract
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'coffee-factory-secret-key-2024'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///coffee_factory.db'
+import os
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'coffee-factory-secret-key-2024'
+
+# Database - PostgreSQL on Vercel, SQLite locally
+DATABASE_URL = os.environ.get('DATABASE_URL', 'sqlite:///coffee_factory.db')
+if DATABASE_URL and DATABASE_URL.startswith('postgres://'):
+    DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
