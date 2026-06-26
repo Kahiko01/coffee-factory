@@ -1,0 +1,8 @@
+{
+    "name": "Karuhiu Utheri Offline Recorder",
+    "short_name": "KU Recorder",
+    "start_url": "/offline",
+    "display": "standalone",
+    "background_color": "#0d1f14",
+    "theme_color": "#d4af37"
+}

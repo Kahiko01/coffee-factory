@@ -119,7 +119,12 @@ def role_required(roles):
         return decorated_function
     return decorator
 
-# ==================== PUBLIC ROUTES ====================
+    return jsonify([{
+        'id': f.id,
+        'name': f.full_name,
+        'membership': f.membership_number,
+        'phone': f.phone or 'N/A'
+    } for f in farmers])
 @app.route('/')
 def index():
     if current_user.is_authenticated:
@@ -139,6 +144,15 @@ def login():
         flash('Invalid username or password', 'danger')
     return render_template('login.html')
 
+@app.route('/api/all-farmers')
+def api_all_farmers():
+    farmers = User.query.filter_by(role='farmer', is_active=True).all()
+    return jsonify([{
+        'id': f.id,
+        'name': f.full_name,
+        'membership': f.membership_number,
+        'phone': f.phone or 'N/A'
+    } for f in farmers])
 @app.route('/logout')
 @login_required
 def logout():
@@ -231,6 +245,32 @@ def analytics():
                          quality_data=quality_data, months=months, monthly_data=monthly_data,
                          top_farmers_names=[t[0] for t in top], top_farmers_values=[float(t[1]) for t in top],
                          paid_amount=float(paid), pending_amount=float(pending))
+@app.route('/api/offline-sync', methods=['POST'])
+def offline_sync():
+    """Sync offline deliveries to the server"""
+    try:
+        data = request.get_json()
+        
+        # Create delivery record
+        delivery = Delivery(
+            farmer_id=1,  # Default - staff should select correct farmer
+            quantity=float(data.get('quantity', 0)),
+            unit='kg',
+            quality_grade=data.get('quality', 'B'),
+            collection_center=data.get('center', 'Unknown'),
+            recorded_by=2,  # Staff ID
+            date_delivered=datetime.fromisoformat(data.get('date', datetime.now().isoformat())),
+            notes=f"Offline sync - Farmer: {data.get('farmerName')} (#{data.get('memberNumber')})"
+        )
+        db.session.add(delivery)
+        db.session.commit()
+        
+        return jsonify({'success': True, 'message': 'Delivery synced!'})
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})
+@app.route('/offline')
+def offline_recorder():
+    return render_template('offline_delivery.html')
 # ==================== DASHBOARD ROUTES ====================
 @app.route('/dashboard')
 @login_required

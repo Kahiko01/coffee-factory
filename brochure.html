@@ -1,0 +1,149 @@
+python3 << 'PYEOF'
+html_content = '''<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karuhiu Utheri - Digital Farmers Cooperative Brochure</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#f5f5f5; display:flex; justify-content:center; padding:20px; }
+        .brochure { width:210mm; min-height:297mm; background:white; box-shadow:0 10px 40px rgba(0,0,0,0.2); }
+        .cover { background:linear-gradient(135deg, #09150d 0%, #0d1f14 50%, #1a1612 100%); color:white; padding:40px; text-align:center; min-height:297mm; display:flex; flex-direction:column; justify-content:center; align-items:center; }
+        .cover h1 { font-size:42px; font-weight:800; color:#d4af37; margin-bottom:10px; }
+        .cover h2 { font-size:18px; font-weight:300; color:#a0c4a8; letter-spacing:4px; text-transform:uppercase; margin-bottom:30px; }
+        .cover .tagline { font-size:16px; color:#d4af37; font-style:italic; margin-top:30px; border-top:1px solid rgba(212,175,55,0.3); padding-top:20px; }
+        .cover .contact { margin-top:50px; font-size:12px; color:#8fa396; }
+        .page { padding:40px; min-height:297mm; }
+        .page-title { font-size:28px; font-weight:700; color:#0b2916; margin-bottom:10px; border-bottom:3px solid #d4af37; padding-bottom:10px; }
+        .two-column { display:grid; grid-template-columns:1fr 1fr; gap:30px; margin-bottom:30px; }
+        .problem-box { background:#fff5f5; border-left:4px solid #dc3545; padding:20px; border-radius:8px; }
+        .solution-box { background:#f0fff4; border-left:4px solid #10b981; padding:20px; border-radius:8px; }
+        .problem-box h3 { color:#dc3545; margin-bottom:10px; }
+        .solution-box h3 { color:#10b981; margin-bottom:10px; }
+        .problem-box li, .solution-box li { padding:5px 0; font-size:14px; list-style:none; }
+        .problem-box li::before { content:"X "; color:#dc3545; font-weight:bold; }
+        .solution-box li::before { content:"✓ "; color:#10b981; font-weight:bold; }
+        .features-grid { display:grid; grid-template-columns:1fr 1fr; gap:15px; margin:30px 0; }
+        .feature-item { padding:15px; background:#f8f9fa; border-radius:10px; border-left:3px solid #d4af37; }
+        .feature-item h4 { color:#0b2916; margin-bottom:5px; font-size:14px; }
+        .feature-item p { color:#666; font-size:12px; }
+        .stats-bar { display:grid; grid-template-columns:repeat(4,1fr); gap:15px; margin:25px 0; text-align:center; }
+        .stat-box { background:linear-gradient(135deg, #0b2916, #1a3a2a); color:white; padding:20px 10px; border-radius:10px; }
+        .stat-number { font-size:28px; font-weight:700; color:#d4af37; }
+        .stat-label { font-size:11px; color:#a0c4a8; margin-top:5px; }
+        .steps { display:grid; grid-template-columns:repeat(4,1fr); gap:15px; margin:25px 0; text-align:center; }
+        .step-number { width:40px; height:40px; background:#d4af37; color:#0b2916; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 10px; font-weight:700; font-size:18px; }
+        .step h4 { font-size:13px; color:#0b2916; margin-bottom:5px; }
+        .step p { font-size:11px; color:#666; }
+        .pricing-table { width:100%; border-collapse:collapse; margin:20px 0; }
+        .pricing-table th { background:#0b2916; color:#d4af37; padding:12px; text-align:left; font-size:13px; }
+        .pricing-table td { padding:10px 12px; border-bottom:1px solid #ddd; font-size:13px; }
+        .access-box { background:#0b2916; color:white; padding:25px; border-radius:15px; text-align:center; margin:20px 0; }
+        .access-box h3 { color:#d4af37; margin-bottom:10px; }
+        .access-box .url { font-size:18px; color:#10b981; font-weight:600; }
+        .footer { background:#0b2916; color:#8fa396; padding:20px 40px; text-align:center; font-size:11px; }
+        .footer .gold { color:#d4af37; }
+        @media print { body { background:white; padding:0; } .brochure { box-shadow:none; width:100%; } .page { page-break-before:always; } }
+    </style>
+</head>
+<body>
+<div class="brochure">
+<div class="cover">
+    <div style="font-size:80px;margin-bottom:20px;">☕</div>
+    <h1>KARUHIU UTHERI</h1>
+    <h2>Digital Farmers Cooperative</h2>
+    <p style="font-size:16px;max-width:500px;line-height:1.6;">Transforming coffee farming through digital innovation. Real-time tracking, transparent payments, and powerful analytics for the modern Kenyan coffee farmer.</p>
+    <div class="tagline">"Empowering Farmers Through Technology"</div>
+    <div class="contact"><p>Nyeri County, Kenya | xajiamos@gmail.com | kahiko.pythonanywhere.com</p></div>
+</div>
+
+<div class="page">
+    <div class="page-title">The Coffee Farmer\'s Challenge</div>
+    <div class="two-column">
+        <div class="problem-box">
+            <h3>Current Problems</h3>
+            <ul>
+                <li>Manual records get lost or damaged</li>
+                <li>Payment disputes due to poor tracking</li>
+                <li>No visibility of farm performance</li>
+                <li>Delayed payments cause financial strain</li>
+                <li>Unfair grading without proof</li>
+                <li>No professional records for loans</li>
+                <li>Factory management overwhelmed</li>
+            </ul>
+        </div>
+        <div class="solution-box">
+            <h3>Our Solution</h3>
+            <ul>
+                <li>Digital records stored forever</li>
+                <li>Automatic payment calculations</li>
+                <li>Real-time yield dashboards</li>
+                <li>Instant payment notifications</li>
+                <li>Transparent quality grading</li>
+                <li>Professional PDF statements</li>
+                <li>Streamlined factory operations</li>
+            </ul>
+        </div>
+    </div>
+    <div class="page-title" style="margin-top:30px;">Key Features</div>
+    <div class="features-grid">
+        <div class="feature-item"><h4>Yield Tracking</h4><p>Daily, weekly, monthly production at your fingertips.</p></div>
+        <div class="feature-item"><h4>Automated Payments</h4><p>Instant calculations based on quality grade.</p></div>
+        <div class="feature-item"><h4>Smart Dashboard</h4><p>Interactive charts showing farm performance.</p></div>
+        <div class="feature-item"><h4>PDF Statements</h4><p>Professional documents with cooperative branding.</p></div>
+        <div class="feature-item"><h4>Real-time Alerts</h4><p>SMS & in-app notifications for every delivery.</p></div>
+        <div class="feature-item"><h4>AI Assistant</h4><p>Smart farming advice and weather alerts.</p></div>
+        <div class="feature-item"><h4>90+ Farmers</h4><p>Already registered and benefiting.</p></div>
+        <div class="feature-item"><h4>Works Anywhere</h4><p>Access from any phone, tablet, or computer.</p></div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-title">How It Works</div>
+    <div class="steps">
+        <div class="step"><div class="step-number">1</div><h4>Register</h4><p>Create account with membership number</p></div>
+        <div class="step"><div class="step-number">2</div><h4>Deliver</h4><p>Bring coffee to collection center</p></div>
+        <div class="step"><div class="step-number">3</div><h4>Track</h4><p>See delivery & payment instantly</p></div>
+        <div class="step"><div class="step-number">4</div><h4>Get Paid</h4><p>Statement available anytime</p></div>
+    </div>
+    <div class="page-title" style="margin-top:30px;">Proven Results</div>
+    <div class="stats-bar">
+        <div class="stat-box"><div class="stat-number">90+</div><div class="stat-label">Farmers</div></div>
+        <div class="stat-box"><div class="stat-number">2,482</div><div class="stat-label">Deliveries</div></div>
+        <div class="stat-box"><div class="stat-number">188K</div><div class="stat-label">Kg Tracked</div></div>
+        <div class="stat-box"><div class="stat-number">684K</div><div class="stat-label">KES Processed</div></div>
+    </div>
+    <div class="page-title" style="margin-top:30px;">Coffee Pricing</div>
+    <table class="pricing-table">
+        <tr><th>Grade</th><th>Price/kg (KES)</th></tr>
+        <tr><td>Premium</td><td>5.50</td></tr>
+        <tr><td>Grade A</td><td>4.50</td></tr>
+        <tr><td>Grade B</td><td>3.50</td></tr>
+        <tr><td>Grade C</td><td>2.50</td></tr>
+    </table>
+</div>
+
+<div class="page">
+    <div class="page-title">Get Started Today</div>
+    <div class="access-box"><h3>Access the Platform</h3><p class="url">kahiko.pythonanywhere.com</p><p style="margin-top:10px;">Works on any device - phone, tablet, or computer</p></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:25px 0;">
+        <div style="background:#f8f9fa;padding:20px;border-radius:10px;"><h4 style="color:#0b2916;">For Farmers</h4><p style="font-size:13px;color:#666;">Free registration | SMS notifications | Payment statements | Farm tracking</p></div>
+        <div style="background:#f8f9fa;padding:20px;border-radius:10px;"><h4 style="color:#0b2916;">For Cooperatives</h4><p style="font-size:13px;color:#666;">Central management | Auto payments | PDF reports | Analytics dashboard</p></div>
+    </div>
+    <div style="text-align:center;margin-top:30px;"><h3 style="color:#0b2916;">Contact Us</h3><p style="color:#666;">Nyeri-Mathira Road, Karatina, Nyeri County, Kenya<br>xajiamos@gmail.com | kahiko.pythonanywhere.com</p></div>
+</div>
+
+<div class="footer"><p><span class="gold">Karuhiu Utheri Digital Farmers Cooperative</span> | "Empowering Farmers Through Technology"</p></div>
+</div>
+</body>
+</html>'''
+
+with open('brochure.html', 'w') as f:
+    f.write(html_content)
+
+print("✅ brochure.html created successfully!")
+PYEOF
+
+# Verify it exists
+ls -la brochure.html

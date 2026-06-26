@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline Delivery Recorder - Karuhiu Utheri</title>
+    <link rel="manifest" href="/static/manifest.json">
+    <style>
+        :root {
+            --bg: #0d1f14;
+            --panel: rgba(13, 27, 18, 0.95);
+            --gold: #d4af37;
+            --emerald: #10b981;
+            --text: #e1ede6;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height:100vh; padding:20px; }
+        .container { max-width:600px; margin:0 auto; }
+        .header { text-align:center; padding:20px; background:var(--panel); border-radius:20px; margin-bottom:20px; border:1px solid rgba(255,255,255,0.1); }
+        .header h1 { color:var(--gold); font-size:1.5rem; }
+        .status-bar { display:flex; align-items:center; justify-content:center; gap:10px; padding:10px; border-radius:10px; margin-bottom:20px; font-weight:600; }
+        .online { background:rgba(16,185,129,0.2); color:var(--emerald); }
+        .offline { background:rgba(255,152,0,0.2); color:#ff9800; }
+        .card { background:var(--panel); border-radius:20px; padding:25px; margin-bottom:20px; border:1px solid rgba(255,255,255,0.1); }
+        .card h2 { color:var(--gold); margin-bottom:20px; font-size:1.2rem; }
+        .form-group { margin-bottom:15px; }
+        .form-group label { display:block; margin-bottom:5px; font-size:0.9rem; color:#8fa396; }
+        .form-group input, .form-group select { width:100%; padding:14px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:12px; color:var(--text); font-size:1rem; }
+        .btn { width:100%; padding:16px; border:none; border-radius:14px; font-size:1.1rem; font-weight:700; cursor:pointer; margin-bottom:10px; }
+        .btn-save { background:var(--gold); color:#000; }
+        .btn-sync { background:var(--emerald); color:#fff; }
+        .btn-fetch { background:#2196F3; color:#fff; }
+        .btn-clear { background:#dc3545; color:#fff; }
+        .btn:disabled { opacity:0.5; cursor:not-allowed; }
+        .pending-badge { display:inline-block; background:#ff9800; color:#000; padding:4px 12px; border-radius:20px; font-size:0.8rem; font-weight:600; }
+        .synced-badge { display:inline-block; background:var(--emerald); color:#fff; padding:4px 12px; border-radius:20px; font-size:0.8rem; font-weight:600; }
+        .record-item { display:flex; justify-content:space-between; align-items:center; padding:12px; background:rgba(255,255,255,0.03); border-radius:10px; margin-bottom:8px; }
+        .record-info { font-size:0.9rem; }
+        .record-info strong { color:var(--gold); }
+        .farmer-search-results { max-height:200px; overflow-y:auto; margin-top:5px; }
+        .farmer-item { padding:12px; background:rgba(255,255,255,0.03); border-radius:8px; margin-bottom:5px; cursor:pointer; }
+        .farmer-item:hover { background:rgba(16,185,129,0.2); }
+        .farmer-item.selected { background:rgba(16,185,129,0.3); border:2px solid var(--emerald); }
+        .selected-farmer { padding:12px; background:rgba(16,185,129,0.15); border-radius:10px; margin-bottom:15px; display:flex; justify-content:space-between; align-items:center; }
+        .selected-farmer strong { color:var(--gold); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>☕ Karuhiu Utheri</h1>
+            <p style="font-size:0.9rem;color:#8fa396;">Offline Delivery Recorder</p>
+        </div>
+
+        <div class="status-bar" id="statusBar">
+            <span id="statusIcon">🔵</span>
+            <span id="statusText">Checking connection...</span>
+        </div>
+
+        <!-- Load Farmers -->
+        <div class="card">
+            <h2>👨‍🌾 Load Farmers</h2>
+            <p style="color:#8fa396; margin-bottom:15px; font-size:0.9rem;">Fetch farmer list while online, then record offline</p>
+            <button class="btn btn-fetch" onclick="fetchFarmers()" id="fetchBtn">
+                📥 Download Farmer List
+            </button>
+            <div id="farmerCount" style="text-align:center; margin-top:10px; color:var(--emerald);"></div>
+            <div class="farmer-search-results" id="farmerList"></div>
+        </div>
+
+        <!-- Record Form -->
+        <div class="card">
+            <h2>📝 Record Delivery</h2>
+            <div id="selectedFarmerBox"></div>
+            <div class="form-group">
+                <label>Search Farmer</label>
+                <input type="text" id="farmerSearch" placeholder="Type farmer name or member number..." oninput="searchFarmers()">
+            </div>
+            <div class="form-group">
+                <label>Quantity (kg)</label>
+                <input type="number" id="quantity" placeholder="Enter quantity" step="0.1" required>
+            </div>
+            <div class="form-group">
+                <label>Quality Grade</label>
+                <select id="quality">
+                    <option value="Premium">Premium</option>
+                    <option value="A">Grade A</option>
+                    <option value="B">Grade B</option>
+                    <option value="C">Grade C</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Collection Center</label>
+                <input type="text" id="center" placeholder="Collection center name" required>
+            </div>
+            <input type="hidden" id="selectedFarmerId">
+            <button class="btn btn-save" onclick="saveDelivery()">
+                💾 Save Delivery (Works Offline)
+            </button>
+        </div>
+
+        <!-- Pending Records -->
+        <div class="card">
+            <h2>📋 Pending Records <span id="pendingCount" class="pending-badge">0</span></h2>
+            <div id="recordsList">
+                <p style="text-align:center;color:#8fa396;">No pending records</p>
+            </div>
+            <button class="btn btn-sync" id="syncBtn" onclick="syncNow()" disabled>
+                🔄 Sync to Server (0 pending)
+            </button>
+            <button class="btn btn-clear" onclick="clearAll()">
+                🗑️ Clear All Records
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let allFarmers = [];
+        let selectedFarmer = null;
+
+        // Check online status
+        function updateStatus() {
+            const bar = document.getElementById('statusBar');
+            const icon = document.getElementById('statusIcon');
+            const text = document.getElementById('statusText');
+            if (navigator.onLine) {
+                bar.className = 'status-bar online';
+                icon.textContent = '🟢';
+                text.textContent = 'Online - Can fetch farmers & sync';
+            } else {
+                bar.className = 'status-bar offline';
+                icon.textContent = '🟠';
+                text.textContent = 'Offline - Using cached farmer list';
+            }
+        }
+        window.addEventListener('online', updateStatus);
+        window.addEventListener('offline', updateStatus);
+        updateStatus();
+
+        // Load cached farmers
+        const cachedFarmers = localStorage.getItem('cachedFarmers');
+        if (cachedFarmers) {
+            allFarmers = JSON.parse(cachedFarmers);
+            document.getElementById('farmerCount').textContent = `✅ ${allFarmers.length} farmers loaded from cache`;
+        }
+
+        // Fetch farmers from server
+        function fetchFarmers() {
+            if (!navigator.onLine) {
+                alert('⚠️ You are offline. Using cached farmer list.');
+                return;
+            }
+            document.getElementById('fetchBtn').textContent = '⏳ Loading...';
+            document.getElementById('fetchBtn').disabled = true;
+            
+            fetch('/api/all-farmers')
+                .then(res => res.json())
+                .then(farmers => {
+                    allFarmers = farmers;
+                    localStorage.setItem('cachedFarmers', JSON.stringify(farmers));
+                    document.getElementById('farmerCount').textContent = `✅ ${farmers.length} farmers loaded`;
+                    document.getElementById('fetchBtn').textContent = '✅ Farmers Loaded!';
+                    document.getElementById('fetchBtn').disabled = false;
+                })
+                .catch(err => {
+                    document.getElementById('farmerCount').textContent = '⚠️ Failed to load. Using cache.';
+                    document.getElementById('fetchBtn').textContent = '📥 Retry Download';
+                    document.getElementById('fetchBtn').disabled = false;
+                });
+        }
+
+        // Search farmers
+        function searchFarmers() {
+            const query = document.getElementById('farmerSearch').value.toLowerCase();
+            if (!query) { 
+                document.getElementById('farmerList').innerHTML = ''; 
+                return; 
+            }
+            
+            const filtered = allFarmers.filter(f => 
+                f.name.toLowerCase().includes(query) || 
+                f.membership.toLowerCase().includes(query)
+            );
+            
+            document.getElementById('farmerList').innerHTML = filtered.slice(0, 10).map(f => `
+                <div class="farmer-item ${selectedFarmer && selectedFarmer.id === f.id ? 'selected' : ''}" 
+                     onclick="selectFarmer(${f.id}, '${f.name}', '${f.membership}')">
+                    <strong>${f.name}</strong><br>
+                    <small>${f.membership} | ${f.phone}</small>
+                </div>
+            `).join('');
+        }
+
+        // Select farmer
+        function selectFarmer(id, name, membership) {
+            selectedFarmer = { id, name, membership };
+            document.getElementById('selectedFarmerId').value = id;
+            document.getElementById('farmerSearch').value = `${name} (${membership})`;
+            document.getElementById('farmerList').innerHTML = '';
+            document.getElementById('selectedFarmerBox').innerHTML = `
+                <div class="selected-farmer">
+                    <div><strong>👨‍🌾 ${name}</strong><br><small>${membership}</small></div>
+                    <span onclick="clearFarmer()" style="cursor:pointer;color:#dc3545;">✕</span>
+                </div>
+            `;
+        }
+
+        function clearFarmer() {
+            selectedFarmer = null;
+            document.getElementById('selectedFarmerId').value = '';
+            document.getElementById('farmerSearch').value = '';
+            document.getElementById('selectedFarmerBox').innerHTML = '';
+        }
+
+        // Save delivery
+        function saveDelivery() {
+            if (!selectedFarmer) { alert('⚠️ Please select a farmer first!'); return; }
+            const quantity = document.getElementById('quantity').value;
+            const quality = document.getElementById('quality').value;
+            const center = document.getElementById('center').value;
+            if (!quantity || !center) { alert('Please fill all fields!'); return; }
+
+            const delivery = {
+                id: Date.now(),
+                farmerId: selectedFarmer.id,
+                farmerName: selectedFarmer.name,
+                memberNumber: selectedFarmer.membership,
+                quantity: quantity,
+                quality: quality,
+                center: center,
+                date: new Date().toISOString(),
+                synced: false
+            };
+
+            let records = JSON.parse(localStorage.getItem('offlineDeliveries') || '[]');
+            records.push(delivery);
+            localStorage.setItem('offlineDeliveries', JSON.stringify(records));
+
+            document.getElementById('quantity').value = '';
+            document.getElementById('center').value = '';
+            clearFarmer();
+            displayRecords();
+            alert('✅ Delivery saved offline! Sync when online.');
+        }
+
+        // Display records
+        function displayRecords() {
+            let records = JSON.parse(localStorage.getItem('offlineDeliveries') || '[]');
+            const list = document.getElementById('recordsList');
+            const count = document.getElementById('pendingCount');
+            const btn = document.getElementById('syncBtn');
+            let unsynced = records.filter(r => !r.synced).length;
+            count.textContent = unsynced;
+            btn.textContent = `🔄 Sync to Server (${unsynced} pending)`;
+            btn.disabled = unsynced === 0;
+
+            if (records.length === 0) {
+                list.innerHTML = '<p style="text-align:center;color:#8fa396;">No pending records</p>';
+                return;
+            }
+            list.innerHTML = records.reverse().map(r => `
+                <div class="record-item">
+                    <div class="record-info">
+                        <strong>${r.farmerName}</strong> (${r.memberNumber})<br>
+                        <small>${r.quantity}kg | Grade ${r.quality} | ${r.center}</small><br>
+                        <small style="color:#8fa396;">${new Date(r.date).toLocaleString()}</small>
+                    </div>
+                    <span class="${r.synced ? 'synced-badge' : 'pending-badge'}">
+                        ${r.synced ? '✓ Synced' : '⏳ Pending'}
+                    </span>
+                </div>
+            `).join('');
+        }
+
+        // Sync to server
+        function syncNow() {
+            if (!navigator.onLine) { alert('⚠️ Offline. Connect to internet first.'); return; }
+            let records = JSON.parse(localStorage.getItem('offlineDeliveries') || '[]');
+            let unsynced = records.filter(r => !r.synced);
+            if (unsynced.length === 0) { alert('No records to sync!'); return; }
+
+            document.getElementById('syncBtn').textContent = '⏳ Syncing...';
+            document.getElementById('syncBtn').disabled = true;
+            let completed = 0;
+
+            unsynced.forEach(record => {
+                fetch('/api/offline-sync', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(record)
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        record.synced = true;
+                        completed++;
+                    }
+                    localStorage.setItem('offlineDeliveries', JSON.stringify(records));
+                    displayRecords();
+                    if (completed === unsynced.length) {
+                        alert(`✅ ${completed} records synced successfully!`);
+                    }
+                });
+            });
+        }
+
+        function clearAll() {
+            if (confirm('Delete all offline records?')) {
+                localStorage.removeItem('offlineDeliveries');
+                displayRecords();
+            }
+        }
+
+        displayRecords();
+    </script>
+</body>
+</html>
